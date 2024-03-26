@@ -19,7 +19,7 @@ RUN mkdir -p /tmp/build/module && \
     cd ngx_http_proxy_connect_module-${NGINX_HTTP_PROXY_CONNECT_MODULE}
 
 RUN cd /tmp/build/nginx/nginx-${NGINX_VERSION} && \
-    patch -p1 < /tmp/build/module/ngx_http_proxy_connect_module-0.0.6/patch/proxy_connect_rewrite_102101.patch
+    patch -p1 < /tmp/build/module/ngx_http_proxy_connect_module-${NGINX_HTTP_PROXY_CONNECT_MODULE}/patch/proxy_connect_rewrite_102101.patch
 
 RUN cd /tmp/build/nginx/nginx-${NGINX_VERSION} && \
     ./configure \
