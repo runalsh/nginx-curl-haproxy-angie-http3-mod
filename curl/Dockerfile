@@ -1,7 +1,7 @@
 FROM buildpack-deps:latest as builder
 
-ENV CURL_VERSION 8.7.1
-ENV QUICHE_VERSION 0.20.1
+ARG CURL_VERSION 8.7.1
+ARG QUICHE_VERSION 0.20.1
 RUN export LANGUAGE=en_US.UTF-8 && export LC_ALL=en_US.UTF-8 && export LANG=en_US.UTF-8 && export LC_CTYPE=en_US.UTF-8
 
 ARG CURL_VERSION
@@ -45,7 +45,7 @@ RUN cd /tmp/build/curl && \
     --with-quiche=/tmp/build/curl/quiche-${QUICHE_VERSION}/target/release \
     --with-zlib && \
     make -j$proc && \
-    make DESTDIR="/tmp/build/curl/curl-${CURL_VERSION}-build/" install
+    make DESTDIR="/tmp/build/curl/curl-build/" install
 
     # make -j$proc
     # && \
@@ -53,26 +53,28 @@ RUN cd /tmp/build/curl && \
 #   wget http://ftp.de.debian.org/debian/pool/main/c/curl/curl_8.6.0-4.debian.tar.xz && \
 #   tar -xJf curl_8.6.0-4.debian.tar.xz -C ./curl-${CURL_VERSION} && \
 
-RUN /tmp/build/curl/curl-${CURL_VERSION}-build/usr/local/bin/curl --version
+RUN /tmp/build/curl/curl-build/usr/local/bin/curl --version
 
 
 FROM alpine:latest
 ARG CURL_VERSION
 ARG QUICHE_VERSION
 
-ENV CURL_VERSION   $CURL_VERSION
+ENV CURL_VERSION ${CURL_VERSION}
 ENV QUICHE_VERSION $QUICHE_VERSION
 
-COPY --from=builder /tmp/build/curl/curl-${CURL_VERSION}-build/usr/local/bin/curl /usr/local/bin/curl
-COPY --from=builder /tmp/build/curl/curl-${CURL_VERSION}-build/usr/local/lib/libcurl.so.4 /usr/local/lib/libcurl.so.4
-COPY --from=builder /usr/lib/x86_64_linux_gnu/libgcc_s.so.1 /usr/lib/libgcc_s.so.1
-COPY --from=builder /usr/lib/x86_64_linux_gnu/libnghttp2.so.14 /usr/lib/libnghttp2.so.14
-COPY --from=builder /usr/lib/x86_64_linux_gnu/libbrotlidec.so.1 /usr/lib/libbrotlidec.so.1
-COPY --from=builder /lib/x86_64_linux_gnu/libz.so.1 /lib/libz.so.1
-COPY --from=builder /usr/lib/x86_64_linux_gnu/libbrotlicommon.so.1 /usr/lib/libbrotlicommon.so.1
+COPY --from=builder /tmp/build/curl/curl-build/usr/local/bin/curl /usr/local/bin/curl
+COPY --from=builder /tmp/build/curl/curl-build/usr/local/lib/libcurl.so.4 /usr/local/lib/libcurl.so.4
+COPY --from=builder /usr/lib/x86_64-linux-gnu/libgcc_s.so.1 /usr/lib/libgcc_s.so.1
+COPY --from=builder /usr/lib/x86_64-linux-gnu/libnghttp2.so.14 /usr/lib/libnghttp2.so.14
+COPY --from=builder /usr/lib/x86_64-linux-gnu/libbrotlidec.so.1 /usr/lib/libbrotlidec.so.1
+COPY --from=builder /lib/x86_64-linux-gnu/libz.so.1 /lib/libz.so.1
+COPY --from=builder /usr/lib/x86_64-linux-gnu/libbrotlicommon.so.1 /usr/lib/libbrotlicommon.so.1
 
 USER nobody
-RUN env | sort; which curl; curl --version
+
+RUN ls -la /usr/local/bin/
+RUN curl --version
 
 
 
