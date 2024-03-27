@@ -1,4 +1,5 @@
-FROM buildpack-deps:latest as builder
+# FROM buildpack-deps:latest as builder
+FROM debian:12-slim as builder
 
 ARG CURL_VERSION 8.7.1
 ARG QUICHE_VERSION 0.20.1
@@ -12,8 +13,8 @@ RUN apt-get update && \
     apt-get --no-install-recommends --no-install-suggests -y install git libnghttp2-dev libtool autoconf automake libbrotli-dev pkg-config cmake  && \
     rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /root
-ENV HOME /root
+RUN mkdir -p /tmp/build/curl/cargo
+ENV HOME /tmp/build/curl/cargo
 
 RUN wget https://sh.rustup.rs -O - | sh -s -- -y
 
@@ -56,23 +57,24 @@ RUN cd /tmp/build/curl && \
 RUN /tmp/build/curl/curl-build/usr/local/bin/curl --version
 
 
-FROM alpine:latest
+FROM debian:12-slim
 ARG CURL_VERSION
 ARG QUICHE_VERSION
 
-ENV CURL_VERSION ${CURL_VERSION}
+ENV CURL_VERSION $CURL_VERSION
 ENV QUICHE_VERSION $QUICHE_VERSION
 
-COPY --from=builder /tmp/build/curl/curl-build/usr/local/bin/curl /usr/local/bin/curl
-COPY --from=builder /tmp/build/curl/curl-build/usr/local/lib/libcurl.so.4 /usr/local/lib/libcurl.so.4
+# RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y ca-certificates nghttp2 zlib1g brotli && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /tmp/build/curl/curl-build/usr/local/ /usr/local/
+COPY --from=builder /tmp/build/curl/quiche-0.20.1/target/release/libquiche.so /usr/lib/libquiche.so
 COPY --from=builder /usr/lib/x86_64-linux-gnu/libgcc_s.so.1 /usr/lib/libgcc_s.so.1
 COPY --from=builder /usr/lib/x86_64-linux-gnu/libnghttp2.so.14 /usr/lib/libnghttp2.so.14
 COPY --from=builder /usr/lib/x86_64-linux-gnu/libbrotlidec.so.1 /usr/lib/libbrotlidec.so.1
 COPY --from=builder /lib/x86_64-linux-gnu/libz.so.1 /lib/libz.so.1
 COPY --from=builder /usr/lib/x86_64-linux-gnu/libbrotlicommon.so.1 /usr/lib/libbrotlicommon.so.1
 
-USER nobody
-
+RUN ldconfig
 RUN ls -la /usr/local/bin/
 RUN curl --version
 
