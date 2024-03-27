@@ -1,5 +1,7 @@
 Nginx with ngx_http_proxy_connect_module and quic-http/3 (openssl)
 
-dockerfile.build - just build and run
+Curl with quic-http/3 (openssl)
 
-dockerfile.builddeb - make deb, install and run
+/nginx/dockerfile.build - just build and run
+
+/nginx/dockerfile.builddeb - make deb, install and run

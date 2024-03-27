@@ -10,7 +10,8 @@ jobs:
                 build_env:
                 - nginx: "1.25.4"
                   httpconnect: "0.0.6"
-
+                  curl: "8.7.1"
+                  quiche: "0.20.1"
         steps:
             - name: Checkout
               uses: actions/checkout@main
@@ -24,22 +25,22 @@ jobs:
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3
     
-            - name: Build and push
+            - name: Build and push Nginx
               uses: docker/build-push-action@v5
               with:
                 context: .
-                file: ./Dockerfile.build
+                file: ./nginx/Dockerfile.build
                 push: true
                 tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx-mod:build
                 build-args: |
                             NGINX=${{ matrix.build_env.nginx }}
                             HTTPCONNECT=${{ matrix.build_env.httpconnect }}
 
-            - name: Build and push
+            - name: Build and push Nginx Deb
               uses: docker/build-push-action@v5
               with:
                 context: .
-                file: ./Dockerfile.builddeb
+                file: ./nginx/Dockerfile.builddeb
                 push: true
                 tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx-mod:deb
                 build-args: |
