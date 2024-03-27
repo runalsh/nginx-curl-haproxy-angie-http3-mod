@@ -1,14 +1,13 @@
 Nginx with ngx_http_proxy_connect_module and quic-http/3 (openssl)
 
-/nginx/Dockerfile.build - just build and run
-
-/nginx/Dockerfile.builddeb - make deb, install and run
-
-https://github.com/runalsh/nginx-curl-http3-mod/releases/tag/1.25.4-0.0.6
+    https://github.com/runalsh/nginx-curl-http3-mod/releases/tag/1.25.4-0.0.6
+    
+    /nginx/Dockerfile.build - just build and run
+    /nginx/Dockerfile.builddeb - make deb, install and run
 
 Curl with http/3 (quiche-boringssl)
 
-/curl/Dockerfile - just build and run 
+    /curl/Dockerfile - just build and run 
 
     CURL 8.7.1 QUICHE 0.20.1 :
     alpine:3.16 version: docker pull runalsh/curl:alpine (43MB)
