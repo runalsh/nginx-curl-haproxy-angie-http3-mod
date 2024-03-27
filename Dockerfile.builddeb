@@ -49,7 +49,7 @@ RUN sed -i "s#--with-stream_ssl_preread_module#--with-stream_ssl_preread_module 
 RUN cd /tmp/build/nginx/nginx-${NGINX_VERSION} && \
     # make clean && \
     dpkg-buildpackage -uc -b && \
-    dpkg -i /tmp/build/nginx/nginx_${NGINX_VERSION}-1~bookworm_amd64.deb
+    dpkg --force-confnew -i /tmp/build/nginx/nginx_${NGINX_VERSION}-1~bookworm_amd64.deb
 
 RUN /tmp/build/nginx/nginx-${NGINX_VERSION}/debian/build-nginx/objs/nginx -V
 
