@@ -1,12 +1,15 @@
 # FROM buildpack-deps:latest as builder
 FROM debian:12-slim as builder
 
-ARG CURL_VERSION 8.7.1
-ARG QUICHE_VERSION 0.20.1
+ENV CURL_VERSION 8.7.1
+ENV QUICHE_VERSION 0.20.1
 RUN export LANGUAGE=en_US.UTF-8 && export LC_ALL=en_US.UTF-8 && export LANG=en_US.UTF-8 && export LC_CTYPE=en_US.UTF-8
 
 ARG CURL_VERSION
 ARG QUICHE_VERSION
+
+ENV CURL_VERSION $CURL_VERSION
+ENV QUICHE_VERSION $QUICHE_VERSION
 
 RUN apt-get update && \
     apt-get --no-install-recommends --no-install-suggests -y install locales wget ca-certificates curl openssl gnupg2 apt-transport-https unzip make libpcre3-dev zlib1g-dev build-essential devscripts debhelper quilt lsb-release libssl-dev lintian uuid-dev && \
@@ -27,7 +30,8 @@ RUN mkdir -p /tmp/build/curl && \
     cd quiche-${QUICHE_VERSION} && \
     git submodule init && \
     git submodule update && \
-    cargo build --package quiche --release --features ffi,pkg-config-meta,qlog
+    cargo build --package quiche --release --features ffi,pkg-config-meta,qlog && \
+    cp -r /tmp/build/curl/quiche-${QUICHE_VERSION}/target/release/ /tmp/build/curl/quiche-build/
 
 RUN cd /tmp/build/curl/quiche-${QUICHE_VERSION} && \
     mkdir -p quiche/deps/boringssl/src/lib && \
@@ -58,6 +62,10 @@ RUN /tmp/build/curl/curl-build/usr/local/bin/curl --version
 
 
 FROM debian:12-slim
+
+ENV CURL_VERSION 7567
+ENV QUICHE_VERSION 65656
+
 ARG CURL_VERSION
 ARG QUICHE_VERSION
 
@@ -67,7 +75,7 @@ ENV QUICHE_VERSION $QUICHE_VERSION
 # RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y ca-certificates nghttp2 zlib1g brotli && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /tmp/build/curl/curl-build/usr/local/ /usr/local/
-COPY --from=builder /tmp/build/curl/quiche-0.20.1/target/release/libquiche.so /usr/lib/libquiche.so
+COPY --from=builder /tmp/build/curl/quiche-build/libquiche.so /usr/lib/libquiche.so
 COPY --from=builder /usr/lib/x86_64-linux-gnu/libgcc_s.so.1 /usr/lib/libgcc_s.so.1
 COPY --from=builder /usr/lib/x86_64-linux-gnu/libnghttp2.so.14 /usr/lib/libnghttp2.so.14
 COPY --from=builder /usr/lib/x86_64-linux-gnu/libbrotlidec.so.1 /usr/lib/libbrotlidec.so.1
