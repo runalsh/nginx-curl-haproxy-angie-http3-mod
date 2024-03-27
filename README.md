@@ -1,10 +1,12 @@
 Nginx with ngx_http_proxy_connect_module and quic-http/3 (openssl)
 
-Curl with http/3 (quiche-boringssl)
-
 /nginx/Dockerfile.build - just build and run
 
 /nginx/Dockerfile.builddeb - make deb, install and run
+
+https://github.com/runalsh/nginx-curl-http3-mod/releases/tag/1.25.4-0.0.6
+
+Curl with http/3 (quiche-boringssl)
 
 /curl/Dockerfile - just build and run 
 
