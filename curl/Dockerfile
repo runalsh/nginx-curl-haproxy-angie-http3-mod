@@ -63,8 +63,8 @@ RUN /tmp/build/curl/curl-build/usr/local/bin/curl --version
 
 FROM debian:12-slim
 
-ENV CURL_VERSION 7567
-ENV QUICHE_VERSION 65656
+ENV CURL_VERSION 8.7.1
+ENV QUICHE_VERSION 0.20.1
 
 ARG CURL_VERSION
 ARG QUICHE_VERSION
@@ -72,7 +72,7 @@ ARG QUICHE_VERSION
 ENV CURL_VERSION $CURL_VERSION
 ENV QUICHE_VERSION $QUICHE_VERSION
 
-# RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y ca-certificates nghttp2 zlib1g brotli && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y ca-certificates && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /tmp/build/curl/curl-build/usr/local/ /usr/local/
 COPY --from=builder /tmp/build/curl/quiche-build/libquiche.so /usr/lib/libquiche.so
@@ -83,8 +83,8 @@ COPY --from=builder /lib/x86_64-linux-gnu/libz.so.1 /lib/libz.so.1
 COPY --from=builder /usr/lib/x86_64-linux-gnu/libbrotlicommon.so.1 /usr/lib/libbrotlicommon.so.1
 
 RUN ldconfig
-RUN ls -la /usr/local/bin/
-RUN curl --version
+
+CMD ["curl"]
 
 
 
