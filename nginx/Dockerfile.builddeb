@@ -44,15 +44,15 @@ RUN mkdir /var/lock/nginx && \
     adduser --system --no-create-home --shell /bin/false --group --disabled-login nginx    
 
 RUN cd /tmp/build/nginx && \
-    wget https://nginx.org/packages/mainline/debian/pool/nginx/n/nginx/nginx_${NGINX_VERSION}-1~bookworm.debian.tar.xz && \
-    tar -xJf nginx_${NGINX_VERSION}-1~bookworm.debian.tar.xz -C ./nginx-${NGINX_VERSION}
+    wget https://nginx.org/packages/mainline/debian/pool/nginx/n/nginx/nginx_${NGINX_VERSION}-1~$(lsb-release).debian.tar.xz && \
+    tar -xJf nginx_${NGINX_VERSION}-1~$(lsb-release).debian.tar.xz -C ./nginx-${NGINX_VERSION}
 
 RUN sed -i "s#--with-stream_ssl_preread_module#--with-stream_ssl_preread_module --with-http_v2_module --with-http_v3_module --add-module=/tmp/build/module/ngx_http_proxy_connect_module-${NGINX_HTTP_PROXY_CONNECT_MODULE}#g" /tmp/build/nginx/nginx-${NGINX_VERSION}/debian/rules 
 
 RUN cd /tmp/build/nginx/nginx-${NGINX_VERSION} && \
     # make clean && \
-    dpkg-buildpackage -uc -b && \
-    dpkg -i /tmp/build/nginx/nginx_${NGINX_VERSION}-1~bookworm_amd64.deb
+    dpkg-buildpackage -uc -us -b && \
+    dpkg -i /tmp/build/nginx/nginx_${NGINX_VERSION}-1~$(lsb-release)_amd64.deb
 
 RUN /tmp/build/nginx/nginx-${NGINX_VERSION}/debian/build-nginx/objs/nginx -V
 
