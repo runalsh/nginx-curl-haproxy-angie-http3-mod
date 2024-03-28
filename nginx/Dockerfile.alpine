@@ -1,4 +1,4 @@
-FROM buildpack-deps:latest
+FROM alpine:3.16 as builder
 
 ENV NGINX_VERSION 1.25.4
 ENV NGINX_HTTP_PROXY_CONNECT_MODULE 0.0.6
@@ -6,9 +6,7 @@ ENV NGINX_HTTP_PROXY_CONNECT_MODULE 0.0.6
 ARG NGINX_VERSION
 ARG NGINX_HTTP_PROXY_CONNECT_MODULE
 
-RUN apt-get update && \
-    apt-get --no-install-recommends --no-install-suggests -y install locales wget ca-certificates openssl gnupg2 apt-transport-https unzip make libpcre3-dev zlib1g-dev build-essential devscripts debhelper quilt lsb-release libssl-dev lintian uuid-dev && \
-    rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache build-base wget ca-certificates openssl gnupg unzip make zlib-dev pkgconfig libtool cmake automake autoconf build-base linux-headers openssl-dev pcre-dev wget zlib-dev ca-certificates uwsgi uwsgi-python3 supervisor
 
 RUN mkdir -p /tmp/build/nginx && \
     cd /tmp/build/nginx && \
@@ -39,13 +37,11 @@ RUN cd /tmp/build/nginx/nginx-${NGINX_VERSION} && \
     make -j $proc && \
     make install
 
-RUN apt-get -y remove locales wget ca-certificates openssl gnupg2 apt-transport-https unzip make libpcre3-dev zlib1g-dev build-essential devscripts debhelper quilt lsb-release lintian uuid-dev &&\
-    apt-get autoremove -y && \
-    rm -rf /tmp/build
-
-RUN mkdir /var/lock/nginx && \
+RUN mkdir -p /var/lock/nginx && \
     mkdir -p /var/cache/nginx && \
-    adduser --system --no-create-home --shell /bin/false --group --disabled-login nginx    
+    mkdir -p /var/run/nginx && \
+    addgroup -S nginx && \
+    adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx
 
 # RUN cd /tmp/build/nginx && \
 #     wget https://nginx.org/packages/mainline/debian/pool/nginx/n/nginx/nginx_${NGINX_VERSION}-1~$(lsb-release).debian.tar.xz && \
@@ -65,10 +61,32 @@ EXPOSE 443
 
 # ADD nginx.conf /etc/nginx/nginx.conf
 
-RUN mkdir -p /var/log/nginx && \
-    touch /var/log/nginx/{error.log,access.log} && \
-    ln -sf /dev/stdout /var/log/nginx/error.log && \
+FROM alpine:3.16
+
+ENV NGINX_VERSION 1.25.4
+ENV NGINX_HTTP_PROXY_CONNECT_MODULE 0.0.6
+
+ARG NGINX_VERSION
+ARG NGINX_HTTP_PROXY_CONNECT_MODULE
+
+RUN apk update	&& \
+	apk --no-cache add openssl pcre && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /usr/sbin/nginx /usr/sbin/nginx
+COPY --from=builder /usr/local /usr/local
+COPY --from=builder /etc/nginx /etc/nginx
+COPY --from=builder /var/log/nginx /var/log/nginx
+COPY --from=builder /var/lock/nginx /var/lock/nginx
+COPY --from=builder /var/run/nginx /var/run/nginx
+
+RUN addgroup -S nginx && \
+    adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx
+
+RUN ln -sf /dev/stdout /var/log/nginx/error.log && \
     ln -sf /dev/stdout /var/log/nginx/access.log
+
+STOPSIGNAL SIGTERM
 
 CMD ["nginx", "-g", "daemon off;"]   
 # nginx -g 'daemon off;'
