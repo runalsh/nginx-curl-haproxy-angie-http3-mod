@@ -4,7 +4,7 @@ Nginx 1.25.4 with ngx_http_proxy_connect_module 0.0.6 and quic-http/3 (openssl)
     /nginx/Dockerfile.alpine
     alpine:3.16 version: docker pull runalsh/nginx-mod:alpine (16MB)
     /nginx/Dockerfile.build - just build and run
-    debian:12-slim version: docker pull runalsh/nginx-mod:build (400MB :O)
+    debian:12-slim version: docker pull runalsh/nginx-mod:build (1.1GB :O)
     /nginx/Dockerfile.builddeb - make deb, install and run
     debian:12-slim version: docker pull runalsh/nginx-mod:deb (98MB)
 
