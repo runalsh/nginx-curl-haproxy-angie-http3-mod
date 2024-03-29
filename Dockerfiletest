@@ -1,4 +1,4 @@
-#docker build -f curl/Dockerfiletest . --no-cache --build-arg CURL_VERSION=1 --build-arg QUICHE_VERSION=2
+#docker build -f Dockerfiletest . --no-cache --build-arg CURL_VERSION=1 --build-arg QUICHE_VERSION=2
 
 FROM debian:12-slim
 
