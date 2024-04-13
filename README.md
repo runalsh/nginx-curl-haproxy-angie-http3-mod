@@ -20,3 +20,9 @@ Curl 8.7.1 with http/3 (quiche-boringssl 0.20.1)
     docker run --rm runalsh/curl curl -sIL https://httpbin.org/brotli | grep -i 'content-encoding: br'
     docker run --rm runalsh/curl curl -sIL https://httpbin.org/gzip | grep -i 'content-encoding: gzip'
     docker run --rm runalsh/curl curl -sIL https://httpbin.org/get | grep -i 'HTTP/2'
+
+HAproxy 2.9.7 with quicktlls 3.1.5
+
+    alpine:3.16 version: docker pull runalsh/haproxy:alpine (64MB - 22MB packed)
+    
+    docker run --rm runalsh/haproxy:alpine -vv
