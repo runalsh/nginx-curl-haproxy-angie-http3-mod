@@ -1,4 +1,4 @@
-Nginx 1.25.5 with ngx_http_proxy_connect_module 0.0.6 and quic-http/3 (openssl) 
+Nginx 1.25.5 with ngx_http_proxy_connect_module 0.0.6 and quic-http/3
 
     Release deb package https://github.com/runalsh/nginx-curl-http3-mod/releases/download/1.25.5-0.0.6/nginx_1.25.5_amd64.deb
     
