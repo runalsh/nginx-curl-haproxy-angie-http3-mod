@@ -1,12 +1,18 @@
-Nginx 1.25.4 with ngx_http_proxy_connect_module 0.0.6 and quic-http/3 (openssl) 
+Nginx 1.25.5 with ngx_http_proxy_connect_module 0.0.6 and quic-http/3 (openssl) 
 
     Release deb package https://github.com/runalsh/nginx-curl-http3-mod/releases/download/1.25.4-0.0.6/nginx_1.25.4-1.bookworm_amd64.deb
-    /nginx/Dockerfile.alpine
-    alpine:3.16 version: docker pull runalsh/nginx-mod:alpine (16MB)
-    /nginx/Dockerfile.build - just build and run
-    debian:12-slim version: docker pull runalsh/nginx-mod:build (1.1GB :O)
+    
+    /nginx/Dockerfile.alpineopenssl
+    alpine:3.19 openssl version: docker pull runalsh/nginx:{latest,1.25.5,openssl} (12MB)
+
+     /nginx/Dockerfile.alpineboring
+    alpine:3.19 boringssl version: docker pull runalsh/nginx:boringssl (13MB)
+
+    /nginx/Dockerfile.alpinequictls
+    alpine:3.19 quictls version: docker pull runalsh/nginx:quictls (16MB)
+
     /nginx/Dockerfile.builddeb - make deb, install and run
-    debian:12-slim version: docker pull runalsh/nginx-mod:deb (98MB)
+    debian:12-slim version: docker pull runalsh/nginx:deb (98MB)
 
 Curl 8.7.1 with http/3 (quiche-boringssl 0.20.1)
 

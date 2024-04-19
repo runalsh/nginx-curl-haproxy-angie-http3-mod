@@ -1,29 +1,34 @@
-FROM alpine:3.16 as builder
+FROM alpine:3.19 as builder
 
 ENV NGINX_VERSION 1.25.5
 ENV NGINX_HTTP_PROXY_CONNECT_MODULE 0.0.6
-ENV BORINGSSL_COMMIT 0568c2c 
-# next commit https://github.com/google/boringssl/commit/c52806157c97105da7fdc2b021d0a0fcd5186bf3 break opennsl library linking
+ENV QUICTLS_VERSION 3.1.5
 
 ARG NGINX_VERSION
 ARG NGINX_HTTP_PROXY_CONNECT_MODULE
-ARG BORINGSSL_COMMIT
+ARG QUICTLS_VERSION
 
-RUN apk add --no-cache build-base wget ca-certificates gnupg unzip make zlib-dev pkgconfig libtool cmake automake autoconf build-base linux-headers pcre-dev wget zlib-dev ca-certificates uwsgi uwsgi-python3 supervisor cmake samurai libunwind-dev linux-headers perl-dev libstdc++
-RUN apk add --no-cache git
-
-COPY --from=golang:alpine3.16 /usr/local/go/ /usr/local/go/
-ENV PATH="/usr/local/go/bin:${PATH}"
-
-# RUN mkdir -p /tmp/build/nginx && \
-#     cd /tmp/build/nginx && \
-#     wget -O nginx-${NGINX_VERSION}.tar.gz https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
-#     tar -zxf nginx-${NGINX_VERSION}.tar.gz
-
+RUN apk add --no-cache build-base wget ca-certificates openssl gnupg unzip make zlib-dev pkgconfig libtool cmake automake autoconf build-base linux-headers openssl-dev pcre-dev wget zlib-dev ca-certificates uwsgi uwsgi-python3 supervisor
+RUN apk add --no-cache libxslt-dev perl-dev geoip-dev
 RUN mkdir -p /tmp/build/nginx && \
     cd /tmp/build/nginx && \
+    # wget -O nginx-${NGINX_VERSION}.tar.gz https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
+    # tar -zxf nginx-${NGINX_VERSION}.tar.gz
     wget -O nginx-${NGINX_VERSION}-hg-quic.tar.gz https://hg.nginx.org/nginx-quic/archive/release-${NGINX_VERSION}.tar.gz && \
     tar -zxf nginx-${NGINX_VERSION}-hg-quic.tar.gz
+
+RUN mkdir -p /tmp/build/quictls && \
+    cd /tmp/build/quictls && \
+    wget "https://github.com/quictls/openssl/archive/refs/tags/openssl-$QUICTLS_VERSION-quic1.tar.gz" && \
+    tar -xzf openssl-$QUICTLS_VERSION-quic1.tar.gz
+
+RUN cd /tmp/build/quictls/openssl-openssl-$QUICTLS_VERSION-quic1 && \
+    ./Configure && \
+    make -j $proc && \
+    make install DESTDIR="/tmp/build/quictls/quictls-build"
+
+RUN ls -la /tmp/build/quictls/quictls-build/usr/local
+
 
 RUN mkdir -p /tmp/build/module && \
     cd /tmp/build/module && \
@@ -34,26 +39,7 @@ RUN mkdir -p /tmp/build/module && \
 RUN cd /tmp/build/nginx/nginx-quic-release-${NGINX_VERSION} && \
     patch -p1 < /tmp/build/module/ngx_http_proxy_connect_module-${NGINX_HTTP_PROXY_CONNECT_MODULE}/patch/proxy_connect_rewrite_102101.patch
 
-RUN mkdir -p /tmp/build/module && \
-    cd /tmp/build/module && \
-    git clone -b master https://github.com/google/boringssl.git && \
-    cd boringssl && \
-    git checkout $BORINGSSL_COMMIT
-# may be change to dl http://github.com/google/boringssl/archive/refs/heads/master.zip
-
-RUN cd /tmp/build/module/boringssl  && \
-    mkdir build  && \
-    cd build  && \
-    cmake -GNinja ..  && \
-    ninja  && \
-    cd ../.. && \
-    mkdir -p boringssl/.openssl/lib && \
-    cp boringssl/build/crypto/libcrypto.a boringssl/build/ssl/libssl.a boringssl/.openssl/lib && \
-    cd boringssl/.openssl && \
-    ln -s ../include . && \
-    touch '/tmp/build/module/boringssl/.openssl/include/openssl/ssl.h'
-
-RUN apk add --no-cache libssl3 libcrypto3 openssl-dev
+RUN ls -la /tmp/build/module/ngx_http_proxy_connect_module-0.0.6
 
 RUN cd /tmp/build/nginx/nginx-quic-release-${NGINX_VERSION} && \
     ./auto/configure \
@@ -62,7 +48,7 @@ RUN cd /tmp/build/nginx/nginx-quic-release-${NGINX_VERSION} && \
 	--pid-path=/var/run/nginx.pid --lock-path=/var/run/nginx.lock \
 	--http-client-body-temp-path=/var/cache/nginx/client_temp --http-proxy-temp-path=/var/cache/nginx/proxy_temp --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
 	--user=nginx --group=nginx \
-    --with-http_ssl_module \
+	--with-http_ssl_module \
     --with-http_realip_module \
     --with-http_addition_module \
     --with-http_sub_module \
@@ -92,38 +78,40 @@ RUN cd /tmp/build/nginx/nginx-quic-release-${NGINX_VERSION} && \
     --with-http_v2_module \
     --with-http_v3_module \
     # --with-http_quic_module \
-    # --with-stream_quic_module \
-    --with-cc-opt="-I/tmp/build/module/boringssl/include  -O0 -fno-common -fno-omit-frame-pointer -DNGX_QUIC_DRAFT_VERSION=29 -DNGX_HTTP_V3_HQ=1" \
-    --with-ld-opt="-L/tmp/build/module/boringssl/build/ssl  -L/tmp/build/module/boringssl/build/crypto" \
+    # --with-stream_quic_module \    
+    --with-cc-opt="-I/tmp/build/quictls/openssl-openssl-$QUICTLS_VERSION-quic1/include" \
+    --with-ld-opt="-L/tmp/build/quictls/openssl-openssl-$QUICTLS_VERSION-quic1 -L/tmp/build/quictls/openssl-openssl-$QUICTLS_VERSION-quic1/ssl -L/tmp/build/quictls/openssl-openssl-$QUICTLS_VERSION-quic1/crypto -O3 -Wl,-Bsymbolic-functions -Wl,-z,relro" \
 	--add-module=/tmp/build/module/ngx_http_proxy_connect_module-${NGINX_HTTP_PROXY_CONNECT_MODULE}
 
-RUN cd /tmp/build/nginx/nginx-quic-release-${NGINX_VERSION} && \
-    make -j$proc && \
+# RUN cd /tmp/build/nginx/nginx-quic-release-${NGINX_VERSION} && \
+#     make -j $proc && \
+#     make install
+
+RUN cd /tmp/build/nginx/nginx-quic-release-${NGINX_VERSION} && \    
+    make -j $proc && \
+    # make install && \
     make install DESTDIR=/tmp/build/nginx/nginx-quic-release-build && \
     ls -la /tmp/build/nginx/nginx-quic-release-build
-    # make install
-
-# RUN nginx -V; nginx -t
-
-# EXPOSE 80
-# EXPOSE 443
-
-# ADD nginx.conf /etc/nginx/nginx.conf
 
 FROM alpine:3.19
 
 ENV NGINX_VERSION 1.25.5
 ENV NGINX_HTTP_PROXY_CONNECT_MODULE 0.0.6
+ENV QUICTLS_VERSION 3.1.5
 
 ARG NGINX_VERSION
 ARG NGINX_HTTP_PROXY_CONNECT_MODULE
+ARG QUICTLS_VERSION
+
 RUN apk update	&& \
-	apk --no-cache add openssl pcre && \
+	apk --no-cache add pcre && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /tmp/build/nginx/nginx-quic-release-build/usr /usr
 # COPY --from=builder /tmp/build/nginx/nginx-quic-release-build/var /var
 COPY --from=builder /tmp/build/nginx/nginx-quic-release-build/etc /etc
+COPY --from=builder /tmp/build/quictls/openssl-openssl-$QUICTLS_VERSION-quic1/libcrypto* /usr/lib/
+COPY --from=builder /tmp/build/quictls/openssl-openssl-$QUICTLS_VERSION-quic1/libssl* /usr/lib/
 
 # COPY --from=builder /usr/sbin/nginx /usr/sbin/nginx
 # COPY --from=builder /usr/local /usr/local
@@ -159,7 +147,6 @@ USER nginx
 
 CMD ["nginx", "-g", "daemon off;"]   
 # nginx -g 'daemon off;'
-
 
 
 
