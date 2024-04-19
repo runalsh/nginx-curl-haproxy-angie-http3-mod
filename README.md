@@ -1,6 +1,6 @@
 Nginx 1.25.5 with ngx_http_proxy_connect_module 0.0.6 and quic-http/3 (openssl) 
 
-    Release deb package https://github.com/runalsh/nginx-curl-http3-mod/releases/download/1.25.4-0.0.6/nginx_1.25.4-1.bookworm_amd64.deb
+    Release deb package [nginx_1.25.5_amd64.deb](https://github.com/runalsh/nginx-curl-http3-mod/releases/download/1.25.5-0.0.6/nginx_1.25.5_amd64.deb)
     
     /nginx/Dockerfile.alpineopenssl
     alpine:3.19 openssl version: docker pull runalsh/nginx:{latest,1.25.5,openssl} (12MB)
