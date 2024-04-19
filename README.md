@@ -12,7 +12,7 @@ Nginx 1.25.5 with ngx_http_proxy_connect_module 0.0.6 and quic-http/3
     alpine:3.19 quictls version: docker pull runalsh/nginx:quictls (16MB)
 
     /nginx/Dockerfile.builddeb - make deb, install and run
-    debian:12-slim version: docker pull runalsh/nginx:deb (98MB)
+    debian:12-slim version: docker pull runalsh/nginx:deb (36MB)
 
 Curl 8.7.1 with http/3 (quiche-boringssl 0.20.1)
 
