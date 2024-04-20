@@ -63,7 +63,7 @@ RUN /tmp/build/nginx/nginx-${NGINX_VERSION}/debian/build-nginx/objs/nginx -V
 EXPOSE 80
 EXPOSE 443
 
-# COPY nginx.conf /etc/nginx/nginx.conf
+# COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 RUN mkdir -p /var/log/nginx && \
     touch /var/log/nginx/{error.log,access.log} && \
@@ -86,7 +86,7 @@ COPY --from=builder /tmp/build/nginx/nginx_${NGINX_VERSION}_amd64.deb /tmp/nginx
 RUN dpkg -i /tmp/nginx_${NGINX_VERSION}_amd64.deb
 RUN nginx -V
 
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 CMD ["nginx", "-g", "daemon off;"]   
 # nginx -g 'daemon off;'

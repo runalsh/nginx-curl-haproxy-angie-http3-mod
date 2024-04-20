@@ -1,4 +1,4 @@
-FROM golang:alpine3.16 as builder
+FROM golang:alpine3.19 as builder
 
 ENV HAPROXY_VERSION 2.9.7
 ENV HAPROXY_MAJOR_VERSION 2.9
