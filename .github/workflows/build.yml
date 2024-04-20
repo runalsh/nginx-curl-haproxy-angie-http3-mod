@@ -76,7 +76,10 @@ jobs:
             - name: Get Nginx Deb
               run:
                 id=$(docker create runalsh/nginx:deb)
+                echo $id
+                echo "docker cp $id:/tmp/nginx_${{ matrix.build_env.nginx }}_amd64.deb - > nginx_${{ matrix.build_env.nginx }}_amd64.deb"
                 docker cp $id:/tmp/nginx_${{ matrix.build_env.nginx }}_amd64.deb - > nginx_${{ matrix.build_env.nginx }}_amd64.deb  
+                echo "docker rm $id"
                 docker rm $id
 
             - name: Upload Nginx Deb to artifacts GH action
@@ -97,7 +100,4 @@ jobs:
                 tag: ${{ github.ref }}
                 overwrite: true
                 body: "nginx ${{ matrix.build_env.nginx }} deb package"
-
-
-
 
