@@ -77,7 +77,7 @@ jobs:
               run:
                 id=$(docker create runalsh/nginx:deb)
                 docker cp $id:/tmp/nginx_${{ matrix.build_env.nginx }}_amd64.deb - > nginx_${{ matrix.build_env.nginx }}_amd64.deb  
-                docker rm -v $id
+                docker rm $id
 
             - name: Upload Nginx Deb to artifacts GH action
               uses: actions/upload-artifact@v4
