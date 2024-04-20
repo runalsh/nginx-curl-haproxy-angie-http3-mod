@@ -1,6 +1,7 @@
 name: build
 on:
   workflow_dispatch:
+  release:
 permissions:
   contents: write
 jobs:
@@ -76,13 +77,13 @@ jobs:
             #                 NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
 
             - name: Get Nginx Deb
+              shell: bash
               run:
                 touch test.file
-            - name: Get Nginx Deb
-              run:
-                ls -la    
+                ls -la  
 
             # - name: Get Nginx Deb
+            #   shell: bash
             #   run:
             #     id=$(docker create runalsh/nginx:deb)
             #     echo $id
@@ -92,25 +93,31 @@ jobs:
             #     docker rm $id
             #     ls -la 
 
-            - name: Upload Nginx Deb to artifacts GH action
-              uses: actions/upload-artifact@v4
-              with:
-                # name: nginx_${{ matrix.build_env.nginx }}_amd64.deb
-                # path: /nginx_${{ matrix.build_env.nginx }}_amd64.deb
-                name: test.file
-                path: ./
-                if-no-files-found: warn
-                overwrite: true
-                retention-days: 360
+            # - name: Upload Nginx Deb to artifacts GH action
+            #   uses: actions/upload-artifact@v4
+            #   with:
+            #     # name: nginx_${{ matrix.build_env.nginx }}_amd64.deb
+            #     # path: /nginx_${{ matrix.build_env.nginx }}_amd64.deb
+            #     name: test.file
+            #     path: ./
+            #     if-no-files-found: warn
+            #     overwrite: true
+            #     retention-days: 90
 
             - name: Upload Nginx Deb to release
               uses: svenstaro/upload-release-action@v2
               with:
                 repo_token: ${{ secrets.GITHUB_TOKEN }}
-                file: test.file
+                file: ./test.file
                 # file: nginx_${{ matrix.build_env.nginx }}_amd64.deb  
                 # asset_name: mything
                 tag: ${{ github.ref }}
                 overwrite: true
                 body: "nginx ${{ matrix.build_env.nginx }} deb package"
 
+            - name: Upload to release
+              uses: JasonEtco/upload-to-release@master
+              with:
+                args: test.file
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
