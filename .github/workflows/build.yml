@@ -3,8 +3,8 @@ on:
   workflow_dispatch:
 jobs:
     build: 
-        # runs-on: ubuntu-latest
-        runs-on: [self-hosted, linux]
+        runs-on: ubuntu-latest
+        #runs-on: [self-hosted, linux]
         strategy:
             matrix:
                 build_env:
@@ -27,40 +27,40 @@ jobs:
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3
 
-            - name: Build and push Nginx alpineopenssl
-              uses: docker/build-push-action@v5
-              with:
-                context: .
-                file: ./nginx/Dockerfile.alpineopenssl
-                push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:openssl, ${{ secrets.DOCKERHUB_USERNAME }}/nginx:latest, ${{ secrets.DOCKERHUB_USERNAME }}/nginx:${{ matrix.build_env.nginx }}, 
-                build-args: |
-                            NGINX_VERSION=${{ matrix.build_env.nginx }}
-                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
+            # - name: Build and push Nginx alpineopenssl
+            #   uses: docker/build-push-action@v5
+            #   with:
+            #     context: .
+            #     file: ./nginx/Dockerfile.alpineopenssl
+            #     push: true
+            #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:openssl, ${{ secrets.DOCKERHUB_USERNAME }}/nginx:latest, ${{ secrets.DOCKERHUB_USERNAME }}/nginx:${{ matrix.build_env.nginx }}, 
+            #     build-args: |
+            #                 NGINX_VERSION=${{ matrix.build_env.nginx }}
+            #                 NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
 
-            - name: Build and push Nginx alpineboringssl
-              uses: docker/build-push-action@v5
-              with:
-                context: .
-                file: ./nginx/Dockerfile.alpineboringssl
-                push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:boringssl
-                build-args: |
-                            NGINX_VERSION=${{ matrix.build_env.nginx }}
-                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
-                            BORINGSSL_COMMIT=${{ matrix.build_env.boring }}
+            # - name: Build and push Nginx alpineboringssl
+            #   uses: docker/build-push-action@v5
+            #   with:
+            #     context: .
+            #     file: ./nginx/Dockerfile.alpineboringssl
+            #     push: true
+            #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:boringssl
+            #     build-args: |
+            #                 NGINX_VERSION=${{ matrix.build_env.nginx }}
+            #                 NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
+            #                 BORINGSSL_COMMIT=${{ matrix.build_env.boring }}
 
-            - name: Build and push Nginx alpinequictls
-              uses: docker/build-push-action@v5
-              with:
-                context: .
-                file: ./nginx/Dockerfile.alpinequictls
-                push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:quicssl
-                build-args: |
-                            NGINX_VERSION=${{ matrix.build_env.nginx }}
-                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
-                            QUICTLS_VERSION=${{ matrix.build_env.quic }}
+            # - name: Build and push Nginx alpinequictls
+            #   uses: docker/build-push-action@v5
+            #   with:
+            #     context: .
+            #     file: ./nginx/Dockerfile.alpinequictls
+            #     push: true
+            #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:quicssl
+            #     build-args: |
+            #                 NGINX_VERSION=${{ matrix.build_env.nginx }}
+            #                 NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
+            #                 QUICTLS_VERSION=${{ matrix.build_env.quic }}
 
             - name: Build and push Nginx Deb
               uses: docker/build-push-action@v5
@@ -73,17 +73,30 @@ jobs:
                             NGINX_VERSION=${{ matrix.build_env.nginx }}
                             NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
 
+            - name: Get Nginx Deb
+              run:
+                id=$(docker create runalsh/nginx:deb)
+                docker cp $id:/tmp/nginx_${{ matrix.build_env.nginx }}_amd64.deb - > nginx_${{ matrix.build_env.nginx }}_amd64.deb  
+                docker rm -v $id
 
+            - name: Upload Nginx Deb to artifacts GH action
+              uses: actions/upload-artifact@v4
+              with:
+                name: nginx_${{ matrix.build_env.nginx }}_amd64.deb
+                path: /nginx_${{ matrix.build_env.nginx }}_amd64.deb
+                if-no-files-found: warn
+                overwrite: true
+                retention-days: 360
 
-
-
-
-
-
-
-
-
-
+            - name: Upload Nginx Deb to release
+              uses: svenstaro/upload-release-action@v2
+              with:
+                repo_token: ${{ secrets.GITHUB_TOKEN }}
+                file: nginx_${{ matrix.build_env.nginx }}_amd64.deb  
+                # asset_name: mything
+                tag: ${{ github.ref }}
+                overwrite: true
+                body: "nginx ${{ matrix.build_env.nginx }} deb package"
 
 
 

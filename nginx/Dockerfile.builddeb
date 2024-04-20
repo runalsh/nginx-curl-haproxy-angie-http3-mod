@@ -84,9 +84,10 @@ RUN apt-get update && \
 
 COPY --from=builder /tmp/build/nginx/nginx_${NGINX_VERSION}_amd64.deb /tmp/nginx_${NGINX_VERSION}_amd64.deb
 RUN dpkg -i /tmp/nginx_${NGINX_VERSION}_amd64.deb
-RUN nginx -V
 
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
+
+RUN nginx -V; nginx -t
 
 CMD ["nginx", "-g", "daemon off;"]   
 # nginx -g 'daemon off;'
