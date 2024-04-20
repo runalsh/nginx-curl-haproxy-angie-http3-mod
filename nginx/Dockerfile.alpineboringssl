@@ -37,9 +37,10 @@ RUN cd /tmp/build/nginx/nginx-quic-release-${NGINX_VERSION} && \
 RUN mkdir -p /tmp/build/module && \
     cd /tmp/build/module && \
     # git clone -b master https://github.com/google/boringssl.git && \
-    git clone -b master https://boringssl.googlesource.com/boringssl && \
-    cd boringssl && \
-    git checkout $BORINGSSL_COMMIT
+    # git clone -b master https://boringssl.googlesource.com/boringssl && \
+    git clone --depth 1 https://github.com/runalsh/boringssl-0568c2c boringssl
+    # cd boringssl && \
+    # git checkout $BORINGSSL_COMMIT
 # https://github.com/google/boringssl/archive/0568c2c1dbff4e1de4d5a63fbaf7d13925df27fa.zip    
 # may be change to dl http://github.com/google/boringssl/archive/refs/heads/master.zip
 
