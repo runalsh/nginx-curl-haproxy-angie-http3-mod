@@ -78,17 +78,19 @@ jobs:
             - name: Get Nginx Deb
               run:
                 touch test.file
-                ls -la
-
             - name: Get Nginx Deb
               run:
-                id=$(docker create runalsh/nginx:deb)
-                echo $id
-                echo "docker cp $id:/tmp/nginx_${{ matrix.build_env.nginx }}_amd64.deb - > nginx_${{ matrix.build_env.nginx }}_amd64.deb"
-                docker cp $id:/tmp/nginx_${{ matrix.build_env.nginx }}_amd64.deb - > nginx_${{ matrix.build_env.nginx }}_amd64.deb  
-                echo "docker rm $id"
-                docker rm $id
-                ls -la 
+                ls -la    
+
+            # - name: Get Nginx Deb
+            #   run:
+            #     id=$(docker create runalsh/nginx:deb)
+            #     echo $id
+            #     echo "docker cp $id:/tmp/nginx_${{ matrix.build_env.nginx }}_amd64.deb - > nginx_${{ matrix.build_env.nginx }}_amd64.deb"
+            #     docker cp $id:/tmp/nginx_${{ matrix.build_env.nginx }}_amd64.deb - > nginx_${{ matrix.build_env.nginx }}_amd64.deb  
+            #     echo "docker rm $id"
+            #     docker rm $id
+            #     ls -la 
 
             - name: Upload Nginx Deb to artifacts GH action
               uses: actions/upload-artifact@v4
