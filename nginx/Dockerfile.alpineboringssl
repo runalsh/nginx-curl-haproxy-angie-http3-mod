@@ -2,7 +2,7 @@ FROM alpine:3.19 as builder
 
 ENV NGINX_VERSION 1.25.5
 ENV NGINX_HTTP_PROXY_CONNECT_MODULE 0.0.6
-ENV BORINGSSL_COMMIT 0568c2c 
+ENV BORINGSSL_COMMIT 0568c2c1dbff4e1de4d5a63fbaf7d13925df27fa 
 # next commit https://github.com/google/boringssl/commit/c52806157c97105da7fdc2b021d0a0fcd5186bf3 break opennsl library linking
 
 ARG NGINX_VERSION
@@ -36,9 +36,11 @@ RUN cd /tmp/build/nginx/nginx-quic-release-${NGINX_VERSION} && \
 
 RUN mkdir -p /tmp/build/module && \
     cd /tmp/build/module && \
-    git clone -b master https://github.com/google/boringssl.git && \
+    # git clone -b master https://github.com/google/boringssl.git && \
+    git clone -b master https://boringssl.googlesource.com/boringssl && \
     cd boringssl && \
     git checkout $BORINGSSL_COMMIT
+# https://github.com/google/boringssl/archive/0568c2c1dbff4e1de4d5a63fbaf7d13925df27fa.zip    
 # may be change to dl http://github.com/google/boringssl/archive/refs/heads/master.zip
 
 RUN cd /tmp/build/module/boringssl  && \

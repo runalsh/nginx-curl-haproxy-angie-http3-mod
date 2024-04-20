@@ -26,18 +26,6 @@ jobs:
     
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3
-    
-            - name: Build and push Nginx alpineboringssl
-              uses: docker/build-push-action@v5
-              with:
-                context: .
-                file: ./nginx/Dockerfile.alpineboringssl
-                push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:boringssl
-                build-args: |
-                            NGINX_VERSION=${{ matrix.build_env.nginx }}
-                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
-                            BORINGSSL_COMMIT=${{ matrix.build_env.boring }}
 
             - name: Build and push Nginx alpineopenssl
               uses: docker/build-push-action@v5
@@ -49,6 +37,18 @@ jobs:
                 build-args: |
                             NGINX_VERSION=${{ matrix.build_env.nginx }}
                             NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
+
+            - name: Build and push Nginx alpineboringssl
+              uses: docker/build-push-action@v5
+              with:
+                context: .
+                file: ./nginx/Dockerfile.alpineboringssl
+                push: true
+                tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:boringssl
+                build-args: |
+                            NGINX_VERSION=${{ matrix.build_env.nginx }}
+                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
+                            BORINGSSL_COMMIT=${{ matrix.build_env.boring }}
 
             - name: Build and push Nginx alpinequictls
               uses: docker/build-push-action@v5
