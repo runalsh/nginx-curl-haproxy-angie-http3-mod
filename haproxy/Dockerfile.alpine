@@ -40,7 +40,7 @@ RUN cd /tmp/build/haproxy/haproxy-$HAPROXY_VERSION && \
     /tmp/build/haproxy/haproxy-build/usr/local/sbin/haproxy -v
 
 
-FROM alpine:3.19
+FROM alpine:3.16
 
 ENV HAPROXY_VERSION 2.9.7
 ENV HAPROXY_MAJOR_VERSION 2.9
