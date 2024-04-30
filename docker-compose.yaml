@@ -4,12 +4,17 @@ services:
     image: myoung34/github-runner:2.316.0
     environment:
       REPO_URL: https://github.com/runalsh/nginx-curl-haproxy-http-3-mod
-      RUNNER_NAME: example-name
-      RUNNER_TOKEN: "AFBAYCO22DGSQJRZWS6U5VLGEOLTG"
-      RUNNER_WORKDIR: /tmp/runner/work
-      # RUNNER_GROUP: my-group
-      # RUNNER_SCOPE: 'repo'
+      RUNNER_NAME: "name"
+      RUNNER_TOKEN: "AFBAYCOW6DLHXHOT5B5EYALGGDX4E"
+      RUNNER_WORKDIR: "/tmp/runner/work"
+      #ACCESS_TOKEN: "ghp"
+      # RUNNER_GROUP: "runalsh"
+      #RUNNER_SCOPE: "repo"
+      #EPHEMERAL: 1
+      # ORG_NAME: "runalsh"
       LABELS: linux,x64,gpu
+    deploy:
+      replicas: 1  
     security_opt:
       # needed on SELinux systems to allow docker container to manage other docker containers
       - label:disable
