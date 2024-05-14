@@ -16,6 +16,7 @@ jobs:
                   quiche: "0.20.1"
                   boring: "0568c2c"
                   quic: "3.1.5"
+                  angie: "1.5.0"
         steps:
             - name: Checkout
               uses: actions/checkout@main
@@ -75,6 +76,26 @@ jobs:
                             NGINX_VERSION=${{ matrix.build_env.nginx }}
                             NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
 
+            - name: Build and push Angie
+              uses: docker/build-push-action@v5
+              with:
+                context: .
+                file: ./angie/angie.dockerfile
+                push: true
+                tags: ${{ secrets.DOCKERHUB_USERNAME }}/angie:latest
+                build-args: |
+                            ANGIE_VERSION=${{ matrix.build_env.angie }}
+
+            - name: Build and push Angie with Proxy module
+              uses: docker/build-push-action@v5
+              with:
+                context: .
+                file: ./angie/angieproxy.dockerfile
+                push: true
+                tags: ${{ secrets.DOCKERHUB_USERNAME }}/angie:proxy
+                build-args: |
+                            ANGIE_VERSION=${{ matrix.build_env.angie }}
+                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}                
 
             # - name: Get Nginx Deb
             #   shell: bash
