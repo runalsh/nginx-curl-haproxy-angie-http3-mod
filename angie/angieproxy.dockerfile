@@ -101,7 +101,7 @@ RUN apk add --no-cache ca-certificates curl \
     && apk add --no-cache angie-console-light \
     && rm /etc/apk/keys/angie-signing.rsa \
     # && ln -sf /dev/stdout /var/log/angie/access.log \
-    # && ln -sf /dev/stderr /var/log/angie/error.log \
+    && ln -sf /dev/stderr /var/log/angie/error.log \
     && mkdir -p /var/cache/angie
 
 RUN angie -V
