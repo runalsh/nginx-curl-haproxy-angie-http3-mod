@@ -1,0 +1,358 @@
+Source: angie
+Maintainer: Release Engineering Team <devops@tech.wbsrv.ru>
+Section: httpd
+Priority: optional
+Build-Depends: debhelper-compat (= 12),
+               dpkg-dev (>= 1.16.1~),
+               quilt (>= 0.46-7~),
+               lsb-release,
+               libssl-dev (>= 0.9.7),
+               libpcre2-dev,
+               zlib1g-dev
+# Build-Depends: debhelper-compat (= 12),
+#                dpkg-dev (>= 1.16.1~),
+#                libpcre2-dev,
+#                libssl-dev,
+#                libjansson-dev,
+#                libldap-dev,
+#                libkrb5-dev,
+#                libbrotli-dev,
+#                libmaxminddb-dev,
+#                libhiredis-dev,
+#                libgd-dev,
+#                libjwt-dev,
+#                autoconf,
+#                automake,
+#                liblua5.3-dev,
+#                libmaxminddb-dev,
+#                libtool,
+#                liblmdb++-dev,
+#                m4,
+#                libyajl-dev,
+#                expect,
+#                libedit-dev,
+#                cmake,
+#                libcurl4-openssl-dev,
+#                libmsgpack-dev,
+#                libperl-dev,
+#                libpq-dev,
+#                libavcodec-dev,
+#                libswscale-dev,
+#                libxslt1-dev,
+#                libzstd-dev,
+#                zlib1g-dev
+Standards-Version: 4.3.0
+Homepage: https://angie.software/
+Rules-Requires-Root: no
+
+Package: angie
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+         adduser
+Description: Efficient, powerful and scalable reverse proxy and web server
+ Actively developing fork of nginx aiming to keep it great
+ with brand new extra functionality.
+
+# Package: angie-module-auth-jwt
+# Architecture: any
+# Conflicts: angie-module-jwt
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie auth-jwt dynamic module
+#  This Angie module implements client 
+#  authorization by validating the provided JSON Web Token (JWT) 
+#  using the specified keys.
+
+# Package: angie-module-auth-ldap
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie auth-ldap dynamic module
+#  LDAP module for Angie which supports authentication against
+#  multiple LDAP servers.
+
+# Package: angie-module-auth-spnego
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie auth-spnego dynamic module
+#  Module adds SPNEGO support to Angie.
+
+# Package: angie-module-brotli
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie Brotli dynamic module
+#  Module adds Brotli compression support to Angie.
+#  Brotli is a generic-purpose lossless compression algorithm that compresses
+#  data using a combination of a modern variant of the LZ77 algorithm, Huffman
+#  coding and 2nd order context modeling, with a compression ratio comparable
+#  to the best currently available general-purpose compression methods.
+#  .
+#  It is similar in speed with deflate but offers more dense compression.
+
+# Package: angie-module-cache-purge
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie cache-purge dynamic module
+#  Module which adds ability to purge content from FastCGI, proxy, SCGI and 
+#  uWSGI caches.
+
+# Package: angie-module-dav-ext
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie dav-ext dynamic module
+#  Module extends built-in DAV module with PROPFIND, OPTIONS, LOCK, UNLOCK support.
+
+# Package: angie-module-dynamic-limit-req
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie dynamic-limit-req dynamic module
+#  Module is used to dynamically lock IP and release it periodically.
+
+# Package: angie-module-echo
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie echo dynamic module
+#  Module brings "echo", "sleep", "time", "exec" and more shell-style goodies 
+#  to config file.
+
+# Package: angie-module-enhanced-memcached
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie enhanced-memcached dynamic module
+#  Module is used to obtain responses from a memcached server.
+#  This module is based on the standard Memcached module,
+#  with some additional features.
+
+# Package: angie-module-eval
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie eval dynamic module
+#  This Angie module captures subrequest
+#  response bodies into variables.
+
+# Package: angie-module-geoip2
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie GeoIP2 dynamic module
+#  Module captures information from the client IP address in variables,
+#  using the MaxMind GeoIP2 databases.
+
+# Package: angie-module-headers-more
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie headers-more dynamic module
+#  Module allows to set and clear input and output headers for Angie.
+
+# Package: angie-module-image-filter
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie image-filter dynamic module
+#  Module is a filter that transforms images in JPEG, GIF, PNG, and WebP formats.
+
+# Package: angie-module-jwt
+# Architecture: any
+# Conflicts: angie-module-auth-jwt
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie JWT dynamic module
+#  Module provides JWT validity check funcionality for Angie.
+
+# Package: angie-module-keyval
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie keyval dynamic module
+#  This Angie module creates variables with values taken 
+#  from key-value pairs.
+
+# Package: angie-module-lua
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie-module-ndk (= 1.5.0-3~buster),
+#          angie (= 1.5.0-3~buster)
+# Description: Angie Lua dynamic module
+#  Module embeds the power of Lua into Angie HTTP/STREAM Servers.
+
+# Package: angie-module-modsecurity
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie modsecurity dynamic module
+#  The ModSecurity-nginx connector is the connection point between Angie and
+#  libmodsecurity (ModSecurity v3).
+#  ModSecurity is an open source, cross platform web application firewall (WAF)
+#  engine for Apache, IIS and Nginx that is developed by Trustwave SpiderLabs.
+
+# Package: angie-module-ndk
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie NDK dynamic module
+#  Module is designed to extend the Angie core functionality.
+
+# Package: angie-module-njs
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie NJS dynamic module
+#  Module is a subset of the JavaScript language that allows extending
+#  Angie functionality.
+
+# Package: angie-module-njs-cli
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends}
+# Description: Angie NJS CLI dynamic module
+#  Command-line interface for Angie NJS.
+
+# Package: angie-module-opentracing
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie OpenTracing dynamic module
+#  Module is used to enable requests served by nginx for distributed tracing
+#  via The OpenTracing Project.
+
+# Package: angie-module-perl
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          ${perl:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie Perl dynamic module
+#  Module is used to implement location and variable handlers in Perl and insert
+#  Perl calls into SSI.
+
+# Package: angie-module-postgres
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie PostgreSQL dynamic module
+#  Module that allows angie to communicate directly with PostgreSQL database.
+
+# Package: angie-module-redis2
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie Redis 2 dynamic module
+#  Module makes Angie talk to a Redis 2.x server in a non-blocking way.
+
+# Package: angie-module-rtmp
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie RTMP dynamic module
+#  Module provides HLS and MPEG-DASH live streaming capabilities.
+
+# Package: angie-module-set-misc
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie-module-ndk (= 1.5.0-3~buster),
+#          angie (= 1.5.0-3~buster)
+# Description: Angie set-misc dynamic module
+#  Module implements numerous additional set_* directives extending
+#  Angie core rewrite module.
+
+# Package: angie-module-subs
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie substitutions dynamic module
+#  Module performs both regular expression and fixed string
+#  substitutions on response bodies.
+
+# Package: angie-module-testcookie
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie testcookie dynamic module
+#  This Angie module is a simple robot mitigation 
+#  module using cookie based challenge/response.
+
+# Package: angie-module-upload
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie upload dynamic module
+#  Module parses request body storing all files being uploaded to a directory.
+
+# Package: angie-module-vod
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster),
+#          ffmpeg
+# Description: Angie VOD dynamic module
+#  Module allows on-the-fly repackaging of MP4 files to DASH, HDS, HLS, MSS.
+
+# Package: angie-module-vts
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie vts dynamic module
+#  Module provides virtual host traffic status.
+
+# Package: angie-module-xslt
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie XSLT dynamic module
+#  Module is a filter that transforms XML responses using XSLT stylesheets.
+
+# Package: angie-module-zip
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie ZIP dynamic module
+#  Module assembles component files from upstream servers response into ZIP archives dynamically.
+
+# Package: angie-module-zstd
+# Architecture: any
+# Depends: ${misc:Depends},
+#          ${shlibs:Depends},
+#          angie (= 1.5.0-3~buster)
+# Description: Angie module for the Zstandard compression
+#  Module is a filter that compresses responses using the "zstd" method. This often helps to reduce the size of transmitted data by half or even more.

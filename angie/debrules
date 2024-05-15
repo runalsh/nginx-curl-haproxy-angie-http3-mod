@@ -1,0 +1,409 @@
+#!/usr/bin/make -f
+
+# see FEATURE AREAS in dpkg-buildflags(1)
+export DEB_BUILD_MAINT_OPTIONS=hardening=+all
+
+# output every command that modifies files on the build system.
+export DH_VERBOSE = 1
+
+# set make jobs from DEB_BUILD_OPTIONS
+ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+MAKEFLAGS += -j$(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+endif
+
+CONFIGURE_ARGS =  --prefix=/etc/angie \
+                  --conf-path=/etc/angie/angie.conf \
+                  --error-log-path=/var/log/angie/error.log \
+                  --http-log-path=/var/log/angie/access.log \
+                  --lock-path=/run/angie.lock \
+                  --modules-path=/usr/lib/angie/modules \
+                  --pid-path=/run/angie.pid \
+                  --sbin-path=/usr/sbin/angie \
+                  --http-acme-client-path=/var/lib/angie/acme \
+                  --http-client-body-temp-path=/var/cache/angie/client_temp \
+                  --http-fastcgi-temp-path=/var/cache/angie/fastcgi_temp \
+                  --http-proxy-temp-path=/var/cache/angie/proxy_temp \
+                  --http-scgi-temp-path=/var/cache/angie/scgi_temp \
+                  --http-uwsgi-temp-path=/var/cache/angie/uwsgi_temp \
+                  --user=angie \
+                  --group=angie \
+                  --with-file-aio \
+                  --with-http_acme_module \
+                  --with-http_addition_module \
+                  --with-http_auth_request_module \
+                  --with-http_dav_module \
+                  --with-http_flv_module \
+                  --with-http_gunzip_module \
+                  --with-http_gzip_static_module \
+                  --with-http_mp4_module \
+                  --with-http_random_index_module \
+                  --with-http_realip_module \
+                  --with-http_secure_link_module \
+                  --with-http_slice_module \
+                  --with-http_ssl_module \
+                  --with-http_stub_status_module \
+                  --with-http_sub_module \
+                  --with-http_v2_module \
+                  --with-http_v3_module \
+                  --with-mail \
+                  --with-mail_ssl_module \
+                  --with-stream \
+                  --with-stream_mqtt_preread_module \
+                  --with-stream_realip_module \
+                  --with-stream_ssl_module \
+                  --with-stream_ssl_preread_module \
+                  --with-threads
+
+CONFIGURE_ADD ?=
+CONFIGURE_ENV ?=
+CC_OPT ?=
+LD_OPT ?=
+MAKE_TARGET ?=modules
+OBJS_DIR ?=
+
+%:
+	dh $@
+
+override_dh_clean:
+	dh_clean
+
+	# $(MAKE) -C luajit2-v2-1-20240314 clean
+	# rm -Rf luajit2-v2-1-20240314/usr
+
+	# if [ -f module-njs-0-8-4/Makefile ]; then \
+	# 	$(MAKE) -C module-njs-0-8-4 clean; \
+	# fi
+
+override_dh_auto_configure:
+	cp -Rp . ../angie-debug
+
+override_dh_auto_build:
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-auth-jwt-0-6-0 \
+	#     OBJS_DIR=module-auth-jwt
+	# cp debian/README-module-auth-jwt module-auth-jwt/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-auth-ldap-83c059b73566c2ee9cbda920d91b66657cf120b7 \
+	#     OBJS_DIR=module-auth-ldap
+	# cp debian/README-module-auth-ldap module-auth-ldap/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-auth-spnego-v1-1-1 \
+	#     OBJS_DIR=module-auth-spnego
+	# cp debian/README-module-auth-spnego module-auth-spnego/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-brotli-v1-0-0rc \
+	#     OBJS_DIR=module-brotli
+	# cp debian/README-module-brotli module-brotli/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-cache-purge-2-5-3 \
+	#     OBJS_DIR=module-cache-purge
+	# cp debian/README-module-cache-purge module-cache-purge/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-dav-ext-v3-0-0 \
+	#     OBJS_DIR=module-dav-ext
+	# cp debian/README-module-dav-ext module-dav-ext/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-dynamic-limit-req-1-9-3 \
+	#     OBJS_DIR=module-dynamic-limit-req
+	# cp debian/README-module-dynamic-limit-req module-dynamic-limit-req/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-echo-v0-63 \
+	#     OBJS_DIR=module-echo
+	# cp debian/README-module-echo module-echo/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-enhanced-memcached-v0-3 \
+	#     OBJS_DIR=module-enhanced-memcached
+	# cp debian/README-module-enhanced-memcached module-enhanced-memcached/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-eval-2016-06-10 \
+	#     OBJS_DIR=module-eval
+	# cp debian/README-module-eval module-eval/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-geoip2-3-4 \
+	#     OBJS_DIR=module-geoip2
+	# cp debian/README-module-geoip2 module-geoip2/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-headers-more-v0-37 \
+	#     OBJS_DIR=module-headers-more
+	# cp debian/README-module-headers-more module-headers-more/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--with-http_image_filter_module=dynamic \
+	#     OBJS_DIR=module-image-filter
+	# cp debian/README-module-image-filter module-image-filter/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-jwt-v3-4-0 \
+	#     OBJS_DIR=module-jwt
+	# cp debian/README-module-jwt module-jwt/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-keyval-0-2-0 \
+	#     OBJS_DIR=module-keyval
+	# cp debian/README-module-keyval module-keyval/README
+
+	# $(MAKE) -C luajit2-v2-1-20240314 \
+	#         CFLAGS="$$CFLAGS -fPIC" DESTDIR=$(CURDIR)/luajit2-v2-1-20240314 install
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD="--add-dynamic-module=module-lua-v0-10-26 \
+	#                    --add-dynamic-module=module-lua-stream-v0-0-14 \
+	#                    --add-dynamic-module=module-ndk-v0-3-3" \
+	#     CONFIGURE_ENV="LUAJIT_INC=$(CURDIR)/luajit2-v2-1-20240314/usr/include/luajit-2.1 \
+	#                    LUAJIT_LIB=$(CURDIR)/luajit2-v2-1-20240314/usr/lib" \
+	#     OBJS_DIR=module-lua
+
+	# $(MAKE) -C lua-resty-core-v0-1-28 install \
+	#     DESTDIR=$(CURDIR)/module-lua/resty-libs LUA_LIB_DIR=
+	# $(MAKE) -C lua-resty-lrucache-v0-13 install \
+	#     DESTDIR=$(CURDIR)/module-lua/resty-libs LUA_LIB_DIR=
+
+	# find module-lua/resty-libs -type f -exec chmod 644 {} \;
+
+	# cp debian/README-module-lua module-lua/README
+
+	# cd ssdeep-release-2-14-1 && \
+	# ./bootstrap && \
+	# ./configure --prefix=$(CURDIR)/sandbox \
+	#             --enable-shared=no \
+	#             --with-pic && \
+	# $(MAKE) -j2 && $(MAKE) -j2 install
+
+	# rmdir modsecurity-v3-0-12/others/libinjection
+	# mv libinjection-b9fcaaf9e50e9492807b23ffcc6af46ee1f203b9 \
+	# 	modsecurity-v3-0-12/others/libinjection
+
+	# cd modsecurity-v3-0-12 && \
+	# ./build.sh && \
+	# ./configure --prefix=$(CURDIR)/sandbox \
+	#             --enable-shared=no \
+	#             --with-geoip=no \
+	#             --with-lmdb \
+	#             --with-lua \
+	#             --with-maxmind \
+	#             --with-pcre2 \
+	#             --with-pic \
+	#             --with-ssdeep=$(CURDIR)/sandbox && \
+	# $(MAKE) -j2 && $(MAKE) -j2 install
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-modsecurity-v1-0-3 \
+	#     CC_OPT="-I$(CURDIR)/sandbox/include" \
+	#     LD_OPT="-L$(CURDIR)/sandbox/lib \
+	#             $$(pkg-config --libs --static \
+	#             $(CURDIR)/sandbox/lib/pkgconfig/modsecurity.pc) \
+	#             -lstdc++" \
+	#     OBJS_DIR=module-modsecurity
+	# cp debian/README-module-modsecurity module-modsecurity/README
+	# install -D -m644 debian/angie-module-modsecurity.logrotate \
+	#            module-modsecurity/logrotate/angie-module-modsecurity
+	# cp debian/modsecurity.rules.conf module-modsecurity/rules.conf
+	# sed -E -e 's,\b(SecAuditLog)\b.*,\1 /var/log/angie/modsecurity/audit.log,' \
+	#        -e 's,\b(SecDebugLog)\b.*,\1 /var/log/angie/modsecurity/debug.log,' \
+	#        -e 's,\b(SecAuditLogStorageDir)\b.*,\1 /var/log/angie/modsecurity/concurrent,' \
+	#     modsecurity-v3-0-12/modsecurity.conf-recommended > \
+	#     module-modsecurity/modsecurity.conf
+	# cp modsecurity-v3-0-12/unicode.mapping module-modsecurity/unicode.mapping
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-ndk-v0-3-3 \
+	#     CC_OPT="-DNDK_SET_VAR -DNDK_UPSTREAM_LIST" \
+	#     OBJS_DIR=module-ndk
+	# cp debian/README-module-ndk module-ndk/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-njs-0-8-4/nginx \
+	#     OBJS_DIR=module-njs
+	# cp debian/README-module-njs module-njs/README
+
+	# cd module-njs-0-8-4; \
+	#     [ -f Makefile ] && $(MAKE) clean; \
+	#     ./configure $(if $(LDFLAGS),--ld-opt="$(LDFLAGS)"); \
+	#     $(MAKE)
+
+	# cd opentracing-cpp-v1-6-0 && \
+	# mkdir .build && cd .build && \
+	# cmake -DCMAKE_INSTALL_PREFIX=$(CURDIR)/sandbox \
+	#       -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+	#       -DCMAKE_PREFIX_PATH=$(CURDIR)/sandbox \
+	#       -DCMAKE_VERBOSE_MAKEFILE=ON \
+	#       -DBUILD_DYNAMIC_LOADING=ON \
+	#       -DBUILD_MOCKTRACER=OFF \
+	#       -DBUILD_SHARED_LIBS=OFF \
+	#       -DBUILD_STATIC_LIBS=ON \
+	#       .. && \
+	# $(MAKE) -j2 install
+
+	# cd dd-opentracing-cpp-v1-3-7 && \
+	# mkdir .build && cd .build && \
+	# cmake -DCMAKE_INSTALL_PREFIX=$(CURDIR)/sandbox \
+	#       -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+	#       -DCMAKE_PREFIX_PATH=$(CURDIR)/sandbox \
+	#       -DCMAKE_VERBOSE_MAKEFILE=ON \
+	#       -DBUILD_SHARED=OFF \
+	#       -DBUILD_PLUGIN=ON \
+	#     .. && \
+	# $(MAKE) -j2
+
+	# cd zipkin-cpp-opentracing-966416e4d6aec23f572730aede6c087ccce6d194 && \
+	# mkdir .build && cd .build && \
+	# cmake -DCMAKE_INSTALL_PREFIX=$(CURDIR)/sandbox \
+	#       -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+	#       -DCMAKE_PREFIX_PATH=$(CURDIR)/sandbox \
+	#       -DCMAKE_VERBOSE_MAKEFILE=ON \
+	#       -DBUILD_SHARED_LIBS=OFF \
+	#       -DBUILD_STATIC_LIBS=OFF \
+	#       -DBUILD_PLUGIN=ON \
+	#       .. && \
+	# $(MAKE) -j2
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-opentracing-v0-34-0/opentracing \
+	#     CC_OPT="-I$(CURDIR)/sandbox/include" \
+	#     LD_OPT="-L$(CURDIR)/sandbox/lib" \
+	#     OBJS_DIR=module-opentracing
+	# cp debian/README-module-opentracing module-opentracing/README
+
+	# cp dd-opentracing-cpp-v1-3-7/.build/libdd_opentracing_plugin.so \
+	#    module-opentracing
+	# cp zipkin-cpp-opentracing-966416e4d6aec23f572730aede6c087ccce6d194/.build/zipkin_opentracing/libzipkin_opentracing_plugin.so \
+	#    module-opentracing
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--with-http_perl_module=dynamic \
+	#     OBJS_DIR=module-perl
+	# cp debian/README-module-perl module-perl/README
+
+	# $(MAKE) -f objs/Makefile install_perl_modules \
+	#      DESTDIR=$(CURDIR)/module-perl/pm INSTALLDIRS=vendor
+	# find module-perl/pm -not -name 'nginx.*' -type f -delete
+	# find module-perl/pm -depth -type d -empty -delete
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-postgres-1-0rc7 \
+	#     OBJS_DIR=module-postgres
+	# cp debian/README-module-postgres module-postgres/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-redis2-v0-15 \
+	#     OBJS_DIR=module-redis2
+	# cp debian/README-module-redis2 module-redis2/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-rtmp-v1-2-2 \
+	#     OBJS_DIR=module-rtmp
+	# cp debian/README-module-rtmp module-rtmp/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD="--add-dynamic-module=module-ndk-v0-3-3 \
+	#                    --add-dynamic-module=module-set-misc-v0-33" \
+	#     OBJS_DIR=module-set-misc
+	# cp debian/README-module-set-misc module-set-misc/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-subs-e12e965ac1837ca709709f9a26f572a54d83430e \
+	#     OBJS_DIR=module-subs
+	# cp debian/README-module-subs module-subs/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-testcookie-64137c2f7e66e8866f56fdecaaf09ac10a034da9 \
+	#     OBJS_DIR=module-testcookie
+	# cp debian/README-module-testcookie module-testcookie/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-upload-2-3-0 \
+	#     OBJS_DIR=module-upload
+	# cp debian/README-module-upload module-upload/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-vod-1-33 \
+	#     OBJS_DIR=module-vod
+	# cp debian/README-module-vod module-vod/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD="--add-dynamic-module=module-stream-sts-v0-1-1 \
+	#                    --add-dynamic-module=module-sts-v0-1-1 \
+	#                    --add-dynamic-module=module-vts-v0-2-2" \
+	#     OBJS_DIR=module-vts
+	# cp debian/README-module-vts module-vts/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--with-http_xslt_module=dynamic \
+	#     OBJS_DIR=module-xslt
+	# cp debian/README-module-xslt module-xslt/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-zip-1-3-0 \
+	#     OBJS_DIR=module-zip
+	# cp debian/README-module-zip module-zip/README
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-zstd-0-1-1 \
+	#     OBJS_DIR=module-zstd
+	# cp debian/README-module-zstd module-zstd/README
+
+	$(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build MAKE_TARGET=build
+
+	cp -p objs/angie objs/angie-nodebug
+	cp -p ../angie-debug/objs/angie objs/angie-debug
+
+	install -D -m644 debian/angie.logrotate objs/logrotate/angie
+
+_build:
+	[ ! -f Makefile ] || $(MAKE) clean
+	env $(CONFIGURE_ENV) ./configure $(CONFIGURE_ARGS) $(CONFIGURE_ADD) \
+	    $(if $(CC_OPT),--with-cc-opt="$(CC_OPT)") \
+	    $(if $(LDFLAGS)$(LD_OPT),--with-ld-opt="$(LDFLAGS)$(if $(LD_OPT), $(LD_OPT))")
+	if [ -n "$(OBJS_DIR)" ]; then \
+	    mkdir $(OBJS_DIR); \
+	fi; \
+	if [ "$(MAKE_TARGET)" != "none" ]; then \
+	    $(MAKE) $(MAKE_TARGET) && \
+	    if [ -n "$(OBJS_DIR)" ]; then \
+	        cp -p objs/*.so $(OBJS_DIR); \
+	    fi; \
+	fi
+
+	cd ../angie-debug && { [ ! -f Makefile ] || $(MAKE) clean; }
+	cd ../angie-debug && \
+	    env $(CONFIGURE_ENV) ./configure $(CONFIGURE_ARGS) --with-debug $(CONFIGURE_ADD) \
+	        --feature-cache=../angie-feature-cache \
+	        $(if $(CC_OPT),--with-cc-opt="$(CC_OPT)") \
+	        $(if $(LDFLAGS)$(LD_OPT),--with-ld-opt="$(LDFLAGS)$(if $(LD_OPT), $(LD_OPT))")
+	if [ "$(MAKE_TARGET)" != "none" ]; then \
+	    cd ../angie-debug && $(MAKE) $(MAKE_TARGET) && \
+	    if [ -n "$(OBJS_DIR)" ]; then \
+	        for so in $$(cd objs && ls *.so); do \
+	            cp -p objs/$$so $(CURDIR)/$(OBJS_DIR)/$${so%.so}-debug.so; \
+	        done; \
+	    fi; \
+	fi
+
+override_dh_auto_install: ;
+
+override_dh_installinit:
+	dh_installinit --name=angie --no-restart-after-upgrade --no-start --no-stop-on-upgrade
+
+override_dh_installsystemd:
+	dh_installsystemd --name=angie --no-restart-after-upgrade --no-start --no-stop-on-upgrade
+
+override_dh_installlogrotate: ;
+
+override_dh_md5sums:
+	if [ -r "$${HOME}/.sign_binaries_with" ]; then \
+		find debian -type f -exec file {} \; | fgrep ': ELF ' | cut -d: -f1 | \
+			xargs bsign -Ns --pgoptions "--default-key=$$(cat $${HOME}/.sign_binaries_with)"; \
+	fi
+	dh_md5sums

@@ -60,7 +60,7 @@ RUN cd /tmp/build/angie/angie-${ANGIE_VERSION} && \
     ls -la && \
     echo "configure-accelerator.patch" > debian/patches/series && \
     # make clean && \
-    dpkg-buildpackage -uc -us -b && \
+    dpkg-buildpackage -uc -us && \
     ls -la /tmp/build/angie/  && \
     osversion=$(lsb_release -cs) && \
     mv /tmp/build/angie/angie_${ANGIE_VERSION}-1~"$osversion"_amd64.deb /tmp/build/angie/angie_${ANGIE_VERSION}_amd64.deb && \
