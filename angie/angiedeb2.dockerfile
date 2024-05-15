@@ -9,6 +9,7 @@ ARG NGINX_HTTP_PROXY_CONNECT_MODULE
 
 RUN apt update && apt install -y --no-install-recommends ca-certificates curl wget lsb-release && \
     curl -o /etc/apt/trusted.gpg.d/angie-signing.gpg https://angie.software/keys/angie-signing.gpg  && \
+    echo "deb https://download.angie.software/angie/debian/ `lsb_release -cs` main" | tee /etc/apt/sources.list.d/angie.list > /dev/null && \
     echo "deb-src https://download.angie.software/angie/debian/ `lsb_release -cs` main" | tee /etc/apt/sources.list.d/angie.list >/dev/null
 
 RUN cat <<EOF > /etc/apt/sources.list
@@ -43,7 +44,7 @@ COPY angie/debcontrol /tmp/build/angie/angie-${ANGIE_VERSION}/debian/control
 
 RUN cd /tmp/build/angie/angie-${ANGIE_VERSION} && \
     sed -i "s#--with-threads#--with-threads --add-module=/tmp/build/module/ngx_http_proxy_connect_module-${NGINX_HTTP_PROXY_CONNECT_MODULE}#g" debian/rules && \
-    rm -rf debian/angie-module* && \
+    # rm -rf debian/angie-module* && \
     dpkg-buildpackage -uc -us -b 
     
 RUN find /tmp/build/angie/ -type f -name angie_*_amd64.deb -print0 | xargs -0 -I'{}' cp '{}' /tmp/angie_${ANGIE_VERSION}_amd64.deb && ls -la /tmp && \
@@ -63,8 +64,10 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/*
 
 COPY --from=builder /tmp/angie_${ANGIE_VERSION}_amd64.deb /tmp/angie_${ANGIE_VERSION}_amd64.deb
-RUN dpkg -i /tmp/angie_${ANGIE_VERSION}_amd64.deb
-# RUN rm -rf /tmp/angie_${ANGIE_VERSION}_amd64.deb
+RUN dpkg -i /tmp/angie_${ANGIE_VERSION}_amd64.deb && \
+    # && ln -sf /dev/stdout /var/log/angie/access.log \
+    ln -sf /dev/stderr /var/log/angie/error.log
+    # RUN rm -rf /tmp/angie_${ANGIE_VERSION}_amd64.deb
 
 RUN angie -V; angie -t
 

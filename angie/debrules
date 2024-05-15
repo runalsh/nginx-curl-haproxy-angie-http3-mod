@@ -364,6 +364,7 @@ override_dh_auto_build:
 _build:
 	[ ! -f Makefile ] || $(MAKE) clean
 	env $(CONFIGURE_ENV) ./configure $(CONFIGURE_ARGS) $(CONFIGURE_ADD) \
+	    --feature-cache=../angie-feature-cache \
 	    $(if $(CC_OPT),--with-cc-opt="$(CC_OPT)") \
 	    $(if $(LDFLAGS)$(LD_OPT),--with-ld-opt="$(LDFLAGS)$(if $(LD_OPT), $(LD_OPT))")
 	if [ -n "$(OBJS_DIR)" ]; then \
