@@ -13,17 +13,14 @@ RUN apt update && apt install -y --no-install-recommends ca-certificates curl wg
     echo "deb-src https://download.angie.software/angie/debian/ `lsb_release -cs` main" | tee /etc/apt/sources.list.d/angie.list >/dev/null
 
 RUN cat <<EOF > /etc/apt/sources.list
-deb http://mirror.yandex.ru/debian/ bookworm main non-free-firmware
-deb-src http://mirror.yandex.ru/debian/ bookworm main non-free-firmware
-deb http://security.debian.org/debian-security bookworm-security main non-free-firmware
-deb-src http://security.debian.org/debian-security bookworm-security main non-free-firmware
-# bookworm-updates, to get updates before a point release is made;
-# see https://www.debian.org/doc/manuals/debian-reference/ch02.en.html#_updates_and_backports
-deb http://mirror.yandex.ru/debian/ bookworm-updates main non-free-firmware
-deb-src http://mirror.yandex.ru/debian/ bookworm-updates main non-free-firmware
+deb http://mirror.yandex.ru/debian/ `lsb_release -cs` main non-free-firmware
+deb-src http://mirror.yandex.ru/debian/ `lsb_release -cs` main non-free-firmware
+deb http://security.debian.org/debian-security `lsb_release -cs`-security main non-free-firmware
+deb-src http://security.debian.org/debian-security `lsb_release -cs`-security main non-free-firmware
+deb http://mirror.yandex.ru/debian/ `lsb_release -cs`-updates main non-free-firmware
+deb-src http://mirror.yandex.ru/debian/ `lsb_release -cs`-updates main non-free-firmware
 EOF
 # RUN apt update  && apt install -y devscripts dh-make
-# RUN  apt install -y expect libedit-dev libpcre2-dev libssl-dev mmv zlib1g-dev
 # RUN apt install --no-install-recommends --no-install-suggests -y libjansson-dev libldap-dev libkrb5-dev libbrotli-dev libmaxminddb-dev libhiredis-dev libgd-dev libjwt-dev liblua5.3-dev liblmdb++-dev libyajl-dev cmake libcurl4-openssl-dev libmsgpack-dev libperl-dev libpq-dev libavcodec-dev libswscale-dev libxslt1-dev libzstd-dev
 RUN apt update && apt install -y --no-install-recommends locales openssl gnupg2 apt-transport-https unzip make libpcre2-dev zlib1g-dev build-essential devscripts debhelper quilt lsb-release libssl-dev lintian uuid-dev dpkg-dev
 
@@ -47,8 +44,11 @@ RUN cd /tmp/build/angie/angie-${ANGIE_VERSION} && \
     # rm -rf debian/angie-module* && \
     dpkg-buildpackage -uc -us -b 
     
-RUN find /tmp/build/angie/ -type f -name angie_*_amd64.deb -print0 | xargs -0 -I'{}' cp '{}' /tmp/angie_${ANGIE_VERSION}_amd64.deb && ls -la /tmp && \
-    rm -rf /tmp/build
+RUN mkdir -p /tmp/angie && \
+    find /tmp/build/angie/ -type f -name angie_*_amd64.deb -print0 | xargs -0 -I'{}' cp '{}' /tmp/angie/angie_${ANGIE_VERSION}_amd64.deb && \
+    rm -rf /tmp/build && \
+    wget -O /tmp/angie/angie-console-light.deb https://download.angie.software/angie/debian/pool/main/a/angie-console-light/$(curl https://download.angie.software/angie/debian/pool/main/a/angie-console-light/ | grep -oE "angie-console-light_[0-9]+\.[0-9]+\.[0-9]+-[0-9]+~`lsb_release -cs`_all\.deb" | sort -V | tail -n 1) && \
+    ls -la /tmp/angie
 
 FROM debian:12-slim
 
@@ -61,13 +61,16 @@ ARG NGINX_HTTP_PROXY_CONNECT_MODULE
 RUN apt-get update && \
     apt-get --no-install-recommends --no-install-suggests -y install libssl-dev && \
     apt clean && apt autoclean && apt autoremove && \
-    rm -rf /var/lib/apt/*
+    rm -rf /var/lib/apt/* && \
+    mkdir -p /tmp/angie
 
-COPY --from=builder /tmp/angie_${ANGIE_VERSION}_amd64.deb /tmp/angie_${ANGIE_VERSION}_amd64.deb
-RUN dpkg -i /tmp/angie_${ANGIE_VERSION}_amd64.deb && \
-    # && ln -sf /dev/stdout /var/log/angie/access.log \
+COPY --from=builder /tmp/angie/angie_${ANGIE_VERSION}_amd64.deb /tmp/angie/angie_${ANGIE_VERSION}_amd64.deb
+COPY --from=builder /tmp/angie/angie-console-light.deb /tmp/angie/angie-console-light.deb
+
+RUN dpkg -i /tmp/angie/*.deb && \
+    # ln -sf /dev/stdout /var/log/angie/access.log \
     ln -sf /dev/stderr /var/log/angie/error.log
-    # RUN rm -rf /tmp/angie_${ANGIE_VERSION}_amd64.deb
+    # rm -rf /tmp/angie
 
 RUN angie -V; angie -t
 

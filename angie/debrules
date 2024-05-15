@@ -67,12 +67,12 @@ OBJS_DIR ?=
 override_dh_clean:
 	dh_clean
 
-	# $(MAKE) -C luajit2-v2-1-20240314 clean
-	# rm -Rf luajit2-v2-1-20240314/usr
+	$(MAKE) -C luajit2-v2-1-20240314 clean
+	rm -Rf luajit2-v2-1-20240314/usr
 
-	# if [ -f module-njs-0-8-4/Makefile ]; then \
-	# 	$(MAKE) -C module-njs-0-8-4 clean; \
-	# fi
+	if [ -f module-njs-0-8-4/Makefile ]; then \
+		$(MAKE) -C module-njs-0-8-4 clean; \
+	fi
 
 override_dh_auto_configure:
 	cp -Rp . ../angie-debug
