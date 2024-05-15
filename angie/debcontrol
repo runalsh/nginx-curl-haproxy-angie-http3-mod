@@ -60,7 +60,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Conflicts: angie-module-jwt
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie auth-jwt dynamic module
 #  This Angie module implements client 
 #  authorization by validating the provided JSON Web Token (JWT) 
@@ -70,7 +70,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie auth-ldap dynamic module
 #  LDAP module for Angie which supports authentication against
 #  multiple LDAP servers.
@@ -79,7 +79,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie auth-spnego dynamic module
 #  Module adds SPNEGO support to Angie.
 
@@ -87,7 +87,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie Brotli dynamic module
 #  Module adds Brotli compression support to Angie.
 #  Brotli is a generic-purpose lossless compression algorithm that compresses
@@ -101,7 +101,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie cache-purge dynamic module
 #  Module which adds ability to purge content from FastCGI, proxy, SCGI and 
 #  uWSGI caches.
@@ -110,7 +110,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie dav-ext dynamic module
 #  Module extends built-in DAV module with PROPFIND, OPTIONS, LOCK, UNLOCK support.
 
@@ -118,7 +118,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie dynamic-limit-req dynamic module
 #  Module is used to dynamically lock IP and release it periodically.
 
@@ -126,7 +126,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie echo dynamic module
 #  Module brings "echo", "sleep", "time", "exec" and more shell-style goodies 
 #  to config file.
@@ -135,7 +135,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie enhanced-memcached dynamic module
 #  Module is used to obtain responses from a memcached server.
 #  This module is based on the standard Memcached module,
@@ -145,7 +145,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie eval dynamic module
 #  This Angie module captures subrequest
 #  response bodies into variables.
@@ -154,7 +154,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie GeoIP2 dynamic module
 #  Module captures information from the client IP address in variables,
 #  using the MaxMind GeoIP2 databases.
@@ -163,7 +163,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie headers-more dynamic module
 #  Module allows to set and clear input and output headers for Angie.
 
@@ -171,7 +171,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie image-filter dynamic module
 #  Module is a filter that transforms images in JPEG, GIF, PNG, and WebP formats.
 
@@ -180,7 +180,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Conflicts: angie-module-auth-jwt
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie JWT dynamic module
 #  Module provides JWT validity check funcionality for Angie.
 
@@ -188,7 +188,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie keyval dynamic module
 #  This Angie module creates variables with values taken 
 #  from key-value pairs.
@@ -197,8 +197,8 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie-module-ndk (= 1.5.0-3~buster),
-#          angie (= 1.5.0-3~buster)
+#          angie-module-ndk (= 1.5.0-3~bookworm),
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie Lua dynamic module
 #  Module embeds the power of Lua into Angie HTTP/STREAM Servers.
 
@@ -206,7 +206,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie modsecurity dynamic module
 #  The ModSecurity-nginx connector is the connection point between Angie and
 #  libmodsecurity (ModSecurity v3).
@@ -217,7 +217,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie NDK dynamic module
 #  Module is designed to extend the Angie core functionality.
 
@@ -225,7 +225,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie NJS dynamic module
 #  Module is a subset of the JavaScript language that allows extending
 #  Angie functionality.
@@ -241,7 +241,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie OpenTracing dynamic module
 #  Module is used to enable requests served by nginx for distributed tracing
 #  via The OpenTracing Project.
@@ -251,7 +251,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
 #          ${perl:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie Perl dynamic module
 #  Module is used to implement location and variable handlers in Perl and insert
 #  Perl calls into SSI.
@@ -260,7 +260,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie PostgreSQL dynamic module
 #  Module that allows angie to communicate directly with PostgreSQL database.
 
@@ -268,7 +268,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie Redis 2 dynamic module
 #  Module makes Angie talk to a Redis 2.x server in a non-blocking way.
 
@@ -276,7 +276,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie RTMP dynamic module
 #  Module provides HLS and MPEG-DASH live streaming capabilities.
 
@@ -284,8 +284,8 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie-module-ndk (= 1.5.0-3~buster),
-#          angie (= 1.5.0-3~buster)
+#          angie-module-ndk (= 1.5.0-3~bookworm),
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie set-misc dynamic module
 #  Module implements numerous additional set_* directives extending
 #  Angie core rewrite module.
@@ -294,7 +294,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie substitutions dynamic module
 #  Module performs both regular expression and fixed string
 #  substitutions on response bodies.
@@ -303,7 +303,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie testcookie dynamic module
 #  This Angie module is a simple robot mitigation 
 #  module using cookie based challenge/response.
@@ -312,7 +312,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie upload dynamic module
 #  Module parses request body storing all files being uploaded to a directory.
 
@@ -320,7 +320,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster),
+#          angie (= 1.5.0-3~bookworm),
 #          ffmpeg
 # Description: Angie VOD dynamic module
 #  Module allows on-the-fly repackaging of MP4 files to DASH, HDS, HLS, MSS.
@@ -329,7 +329,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie vts dynamic module
 #  Module provides virtual host traffic status.
 
@@ -337,7 +337,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie XSLT dynamic module
 #  Module is a filter that transforms XML responses using XSLT stylesheets.
 
@@ -345,7 +345,7 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie ZIP dynamic module
 #  Module assembles component files from upstream servers response into ZIP archives dynamically.
 
@@ -353,6 +353,6 @@ Description: Efficient, powerful and scalable reverse proxy and web server
 # Architecture: any
 # Depends: ${misc:Depends},
 #          ${shlibs:Depends},
-#          angie (= 1.5.0-3~buster)
+#          angie (= 1.5.0-3~bookworm)
 # Description: Angie module for the Zstandard compression
 #  Module is a filter that compresses responses using the "zstd" method. This often helps to reduce the size of transmitted data by half or even more.

@@ -45,7 +45,7 @@ RUN cd /tmp/build/angie/angie-${ANGIE_VERSION} && \
     dpkg-buildpackage -uc -us -b
     
 RUN mkdir -p /tmp/angie && \
-    find /tmp/build/angie/ -type f -name angie_*_amd64.deb -print0 | xargs -0 -I'{}' mv '{}' /tmp/angie/angie_${ANGIE_VERSION}_amd64.deb && \
+    # find /tmp/build/angie/ -type f -name angie_*_amd64.deb -print0 | xargs -0 -I'{}' mv '{}' /tmp/angie/angie_${ANGIE_VERSION}_amd64.deb && \
     wget -O /tmp/build/angie/angie-console-light.deb https://download.angie.software/angie/debian/pool/main/a/angie-console-light/$(curl https://download.angie.software/angie/debian/pool/main/a/angie-console-light/ | grep -oE "angie-console-light_[0-9]+\.[0-9]+\.[0-9]+-[0-9]+~`lsb_release -cs`_all\.deb" | sort -V | tail -n 1) && \
     rm -rf /tmp/build/angie/*dbgsym* && \
     cp /tmp/build/angie/*.deb /tmp/angie && \
@@ -66,8 +66,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/* && \
     mkdir -p /tmp/angie
 
-COPY --from=builder /tmp/angie/angie_${ANGIE_VERSION}_amd64.deb /tmp/angie/angie_${ANGIE_VERSION}_amd64.deb
-COPY --from=builder /tmp/angie/angie-console-light.deb /tmp/angie/angie-console-light.deb
+COPY --from=builder /tmp/angie/*.deb /tmp/angie
 
 RUN dpkg -i /tmp/angie/*.deb && \
     # ln -sf /dev/stdout /var/log/angie/access.log \
