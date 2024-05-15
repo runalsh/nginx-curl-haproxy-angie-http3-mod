@@ -42,12 +42,14 @@ COPY angie/debcontrol /tmp/build/angie/angie-${ANGIE_VERSION}/debian/control
 RUN cd /tmp/build/angie/angie-${ANGIE_VERSION} && \
     sed -i "s#--with-threads#--with-threads --add-module=/tmp/build/module/ngx_http_proxy_connect_module-${NGINX_HTTP_PROXY_CONNECT_MODULE}#g" debian/rules && \
     # rm -rf debian/angie-module* && \
-    dpkg-buildpackage -uc -us -b 
+    dpkg-buildpackage -uc -us -b
     
 RUN mkdir -p /tmp/angie && \
-    find /tmp/build/angie/ -type f -name angie_*_amd64.deb -print0 | xargs -0 -I'{}' cp '{}' /tmp/angie/angie_${ANGIE_VERSION}_amd64.deb && \
+    find /tmp/build/angie/ -type f -name angie_*_amd64.deb -print0 | xargs -0 -I'{}' mv '{}' /tmp/angie/angie_${ANGIE_VERSION}_amd64.deb && \
+    wget -O /tmp/build/angie/angie-console-light.deb https://download.angie.software/angie/debian/pool/main/a/angie-console-light/$(curl https://download.angie.software/angie/debian/pool/main/a/angie-console-light/ | grep -oE "angie-console-light_[0-9]+\.[0-9]+\.[0-9]+-[0-9]+~`lsb_release -cs`_all\.deb" | sort -V | tail -n 1) && \
+    rm -rf /tmp/build/angie/*dbgsym* && \
+    cp /tmp/build/angie/*.deb /tmp/angie && \
     rm -rf /tmp/build && \
-    wget -O /tmp/angie/angie-console-light.deb https://download.angie.software/angie/debian/pool/main/a/angie-console-light/$(curl https://download.angie.software/angie/debian/pool/main/a/angie-console-light/ | grep -oE "angie-console-light_[0-9]+\.[0-9]+\.[0-9]+-[0-9]+~`lsb_release -cs`_all\.deb" | sort -V | tail -n 1) && \
     ls -la /tmp/angie
 
 FROM debian:12-slim
@@ -60,7 +62,7 @@ ARG NGINX_HTTP_PROXY_CONNECT_MODULE
 
 RUN apt-get update && \
     apt-get --no-install-recommends --no-install-suggests -y install libssl-dev && \
-    apt clean && apt autoclean && apt autoremove && \
+    apt clean && apt autoclean && apt autoremove -y && \
     rm -rf /var/lib/apt/* && \
     mkdir -p /tmp/angie
 
