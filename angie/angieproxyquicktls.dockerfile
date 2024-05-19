@@ -3,9 +3,11 @@ FROM alpine as builder
 
 ENV ANGIE_VERSION 1.5.0
 ENV NGINX_HTTP_PROXY_CONNECT_MODULE 0.0.6
+ENV QUICTLS_VERSION 3.1.5
 
 ARG ANGIE_VERSION
 ARG NGINX_HTTP_PROXY_CONNECT_MODULE
+ARG QUICTLS_VERSION
 
 RUN apk add --no-cache --virtual .build-deps build-base wget ca-certificates gnupg unzip make zlib-dev pkgconfig libtool cmake automake autoconf build-base linux-headers pcre-dev wget curl zlib-dev ca-certificates uwsgi uwsgi-python3 supervisor cmake samurai libunwind-dev linux-headers perl-dev libstdc++  libssl3 libcrypto3 openssl openssl-dev git luajit-dev libxslt-dev
 
@@ -28,7 +30,7 @@ RUN mkdir -p /tmp/build/module && \
 
 RUN mkdir -p /tmp/build/module && \
     cd /tmp/build/module && \
-    git clone --recursive --depth 1 https://github.com/quictls/openssl
+    git clone --recursive --depth 1 -b openssl-${QUICTLS_VERSION}+quic https://github.com/quictls/openssl
 
 # RUN cd /tmp/build/module && \
 #     git clone --depth=1 https://github.com/vozlt/nginx-module-vts nginx-module-vts
@@ -131,9 +133,11 @@ FROM alpine
 
 ENV ANGIE_VERSION 1.5.0
 ENV NGINX_HTTP_PROXY_CONNECT_MODULE 0.0.6
+ENV QUICTLS_VERSION 3.1.5
 
 ARG ANGIE_VERSION
 ARG NGINX_HTTP_PROXY_CONNECT_MODULE
+ARG QUICTLS_VERSION
 
 COPY --from=builder /tmp/build/angie/angie-release-build/usr /usr
 COPY --from=builder /tmp/build/angie/angie-release-build/var /var

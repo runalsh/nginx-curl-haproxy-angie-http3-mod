@@ -15,7 +15,7 @@ jobs:
                   curl: "8.7.1"
                   quiche: "0.20.1"
                   boring: "0568c2c"
-                  quic: "3.1.5"
+                  quictls: "3.1.5"
                   angie: "1.5.1"
         steps:
             - name: Checkout
@@ -63,7 +63,7 @@ jobs:
             #     build-args: |
             #                 NGINX_VERSION=${{ matrix.build_env.nginx }}
             #                 NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
-            #                 QUICTLS_VERSION=${{ matrix.build_env.quic }}
+            #                 QUICTLS_VERSION=${{ matrix.build_env.quictls }}
 
             # - name: Build and push Nginx Deb
             #   uses: docker/build-push-action@v5
