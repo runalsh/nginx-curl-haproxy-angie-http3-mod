@@ -66,12 +66,9 @@ ENV QUICHE_VERSION 0.20.1
 ARG CURL_VERSION
 ARG QUICHE_VERSION
 
-ENV CURL_VERSION $CURL_VERSION
-ENV QUICHE_VERSION $QUICHE_VERSION
-
 RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y ca-certificates && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /tmp/build/curl/curl-build/usr/local/ /usr/local/
+COPY --from=builder /tmp/build/curl/curl-build/usr /usr
 COPY --from=builder /tmp/build/curl/quiche-build/libquiche.so /usr/lib/libquiche.so
 COPY --from=builder /usr/lib/x86_64-linux-gnu/libgcc_s.so.1 /usr/lib/libgcc_s.so.1
 COPY --from=builder /usr/lib/x86_64-linux-gnu/libnghttp2.so.14 /usr/lib/libnghttp2.so.14
@@ -80,23 +77,6 @@ COPY --from=builder /lib/x86_64-linux-gnu/libz.so.1 /lib/libz.so.1
 COPY --from=builder /usr/lib/x86_64-linux-gnu/libbrotlicommon.so.1 /usr/lib/libbrotlicommon.so.1
 
 RUN ldconfig
-
+RUN env | sort; which curl; curl --version
 CMD ["curl"]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
