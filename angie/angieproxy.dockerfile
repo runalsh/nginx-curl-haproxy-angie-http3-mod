@@ -7,7 +7,7 @@ ENV NGINX_HTTP_PROXY_CONNECT_MODULE 0.0.6
 ARG ANGIE_VERSION
 ARG NGINX_HTTP_PROXY_CONNECT_MODULE
 
-RUN apk add --no-cache --virtual .build-deps build-base wget ca-certificates gnupg unzip make zlib-dev pkgconfig libtool cmake automake autoconf build-base linux-headers pcre-dev wget zlib-dev ca-certificates uwsgi uwsgi-python3 supervisor cmake samurai libunwind-dev linux-headers perl-dev libstdc++  libssl3 libcrypto3 openssl openssl-dev git luajit-dev libxslt-dev
+RUN apk add --no-cache --virtual .build-deps build-base wget curl ca-certificates gnupg unzip make zlib-dev pkgconfig libtool cmake automake autoconf build-base linux-headers pcre-dev wget zlib-dev ca-certificates uwsgi uwsgi-python3 supervisor cmake samurai libunwind-dev linux-headers perl-dev libstdc++  libssl3 libcrypto3 openssl openssl-dev git luajit-dev libxslt-dev
 
 COPY --from=golang:alpine /usr/local/go/ /usr/local/go/
 ENV PATH="/usr/local/go/bin:${PATH}"
@@ -15,15 +15,15 @@ ENV PATH="/usr/local/go/bin:${PATH}"
 RUN mkdir -p /tmp/build/angie && \
     cd /tmp/build/angie && \
     wget -O angie-${ANGIE_VERSION}.tar.gz https://download.angie.software/files/angie-${ANGIE_VERSION}.tar.gz && \
-    tar -zxf angie-${ANGIE_VERSION}.tar.gz
+    tar -zxf angie-${ANGIE_VERSION}.tar.gz && \
+    sed -i -e '1i pid /tmp/angie.pid;\n' angie-${ANGIE_VERSION}/conf/angie.conf && \
+    sed -i -e 's/listen       80;/listen 8080;/g' angie-${ANGIE_VERSION}/conf/angie.conf 
 
 RUN mkdir -p /tmp/build/module && \
     cd /tmp/build/module && \
     wget -O ngx_http_proxy_connect_module-${NGINX_HTTP_PROXY_CONNECT_MODULE}.tar.gz https://github.com/chobits/ngx_http_proxy_connect_module/archive/refs/tags/v${NGINX_HTTP_PROXY_CONNECT_MODULE}.tar.gz && \
     tar -zxf ngx_http_proxy_connect_module-${NGINX_HTTP_PROXY_CONNECT_MODULE}.tar.gz && \
-    cd ngx_http_proxy_connect_module-${NGINX_HTTP_PROXY_CONNECT_MODULE}
-
-RUN cd /tmp/build/angie/angie-${ANGIE_VERSION} && \
+    cd /tmp/build/angie/angie-${ANGIE_VERSION} && \
     patch -p1 < /tmp/build/module/ngx_http_proxy_connect_module-${NGINX_HTTP_PROXY_CONNECT_MODULE}/patch/proxy_connect_rewrite_102101.patch
 
 # RUN cd /tmp/build/module && \
@@ -62,7 +62,7 @@ RUN cd /tmp/build/angie/angie-${ANGIE_VERSION} && \
     ./configure \
     --prefix=/etc/angie --conf-path=/etc/angie/angie.conf \
     --error-log-path=/var/log/angie/error.log --http-log-path=/var/log/angie/access.log --lock-path=/run/angie.lock \
-    --modules-path=/usr/lib/angie/modules --pid-path=/run/angie.pid --sbin-path=/usr/sbin/angie \
+    --modules-path=/usr/lib/angie/modules --pid-path=/tmp/angie.pid --sbin-path=/usr/sbin/angie \
     --http-acme-client-path=/var/lib/angie/acme --http-client-body-temp-path=/var/cache/angie/client_temp  \
     --http-fastcgi-temp-path=/var/cache/angie/fastcgi_temp --http-proxy-temp-path=/var/cache/angie/proxy_temp \
     --http-scgi-temp-path=/var/cache/angie/scgi_temp --http-uwsgi-temp-path=/var/cache/angie/uwsgi_temp \
@@ -82,8 +82,11 @@ RUN cd /tmp/build/angie/angie-${ANGIE_VERSION} && \
 RUN cd /tmp/build/angie/angie-${ANGIE_VERSION} && \
     make -j$proc && \
     make install DESTDIR=/tmp/build/angie/angie-release-build && \
-    ls -la /tmp/build/angie/angie-release-build
-
+    ls -la /tmp/build/angie/angie-release-build && \
+    curl -o /etc/apk/keys/angie-signing.rsa https://angie.software/keys/angie-signing.rsa && \
+    echo "https://download.angie.software/angie/alpine/v$(egrep -o '[0-9]+\.[0-9]+' /etc/alpine-release)/main" >> /etc/apk/repositories && \
+    apk add --no-cache angie-console-light
+    
 RUN apk del .build-deps
 
 FROM alpine
@@ -97,17 +100,23 @@ ARG NGINX_HTTP_PROXY_CONNECT_MODULE
 COPY --from=builder /tmp/build/angie/angie-release-build/usr /usr
 COPY --from=builder /tmp/build/angie/angie-release-build/var /var
 COPY --from=builder /tmp/build/angie/angie-release-build/etc /etc
+COPY --from=builder /usr/share/angie-console-light /usr/share/angie-console-light
 
-RUN apk add --no-cache ca-certificates curl \
-    && curl -o /etc/apk/keys/angie-signing.rsa https://angie.software/keys/angie-signing.rsa \
-    && echo "https://download.angie.software/angie/alpine/v$(egrep -o \
-        '[0-9]+\.[0-9]+' /etc/alpine-release)/main" >> /etc/apk/repositories \
-    && apk add --no-cache angie-console-light \
-    && rm /etc/apk/keys/angie-signing.rsa \
+RUN addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie --uid 101 --no-create-home
+RUN apk add --no-cache ca-certificates pcre && \
     # && ln -sf /dev/stdout /var/log/angie/access.log \
-    && ln -sf /dev/stderr /var/log/angie/error.log \
-    && mkdir -p /var/cache/angie
+    ln -sf /dev/stderr /var/log/angie/error.log
 
-RUN angie -V
+RUN mkdir -p /var/cache/angie && chown -R angie:angie /var/cache/angie && chmod -R g+w /var/cache/angie && \
+    chown -R angie:angie /etc/angie && chmod -R g+w /etc/angie && \
+    mkdir -p /var/log/angie && chown -R angie:angie /var/log/angie && chmod -R g+w /var/log/angie && \
+    mkdir -p /usr/lib/angie && chown -R angie:angie /usr/lib/angie && chmod -R g+w /usr/lib/angie
 
+EXPOSE 8080/tcp
+
+STOPSIGNAL SIGQUIT
+
+USER angie
+
+RUN angie -V && angie -t
 CMD ["angie", "-g", "daemon off;"]

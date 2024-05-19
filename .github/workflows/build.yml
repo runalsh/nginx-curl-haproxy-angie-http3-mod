@@ -16,7 +16,7 @@ jobs:
                   quiche: "0.20.1"
                   boring: "0568c2c"
                   quic: "3.1.5"
-                  angie: "1.5.0"
+                  angie: "1.5.1"
         steps:
             - name: Checkout
               uses: actions/checkout@main
@@ -30,51 +30,51 @@ jobs:
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3
 
-            - name: Build and push Nginx alpineopenssl
-              uses: docker/build-push-action@v5
-              with:
-                context: .
-                file: ./nginx/Dockerfile.alpineopenssl
-                push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:openssl, ${{ secrets.DOCKERHUB_USERNAME }}/nginx:latest, ${{ secrets.DOCKERHUB_USERNAME }}/nginx:${{ matrix.build_env.nginx }}, 
-                build-args: |
-                            NGINX_VERSION=${{ matrix.build_env.nginx }}
-                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
+            # - name: Build and push Nginx alpineopenssl
+            #   uses: docker/build-push-action@v5
+            #   with:
+            #     context: .
+            #     file: ./nginx/Dockerfile.alpineopenssl
+            #     push: true
+            #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:openssl, ${{ secrets.DOCKERHUB_USERNAME }}/nginx:latest, ${{ secrets.DOCKERHUB_USERNAME }}/nginx:${{ matrix.build_env.nginx }}, 
+            #     build-args: |
+            #                 NGINX_VERSION=${{ matrix.build_env.nginx }}
+            #                 NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
 
-            - name: Build and push Nginx alpineboringssl
-              uses: docker/build-push-action@v5
-              with:
-                context: .
-                file: ./nginx/Dockerfile.alpineboringssl
-                push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:boringssl
-                build-args: |
-                            NGINX_VERSION=${{ matrix.build_env.nginx }}
-                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
-                            BORINGSSL_COMMIT=${{ matrix.build_env.boring }}
+            # - name: Build and push Nginx alpineboringssl
+            #   uses: docker/build-push-action@v5
+            #   with:
+            #     context: .
+            #     file: ./nginx/Dockerfile.alpineboringssl
+            #     push: true
+            #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:boringssl
+            #     build-args: |
+            #                 NGINX_VERSION=${{ matrix.build_env.nginx }}
+            #                 NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
+            #                 BORINGSSL_COMMIT=${{ matrix.build_env.boring }}
 
-            - name: Build and push Nginx alpinequictls
-              uses: docker/build-push-action@v5
-              with:
-                context: .
-                file: ./nginx/Dockerfile.alpinequictls
-                push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:quicssl
-                build-args: |
-                            NGINX_VERSION=${{ matrix.build_env.nginx }}
-                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
-                            QUICTLS_VERSION=${{ matrix.build_env.quic }}
+            # - name: Build and push Nginx alpinequictls
+            #   uses: docker/build-push-action@v5
+            #   with:
+            #     context: .
+            #     file: ./nginx/Dockerfile.alpinequictls
+            #     push: true
+            #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:quicssl
+            #     build-args: |
+            #                 NGINX_VERSION=${{ matrix.build_env.nginx }}
+            #                 NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
+            #                 QUICTLS_VERSION=${{ matrix.build_env.quic }}
 
-            - name: Build and push Nginx Deb
-              uses: docker/build-push-action@v5
-              with:
-                context: .
-                file: ./nginx/Dockerfile.builddeb
-                push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:deb
-                build-args: |
-                            NGINX_VERSION=${{ matrix.build_env.nginx }}
-                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
+            # - name: Build and push Nginx Deb
+            #   uses: docker/build-push-action@v5
+            #   with:
+            #     context: .
+            #     file: ./nginx/Dockerfile.builddeb
+            #     push: true
+            #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:deb
+            #     build-args: |
+            #                 NGINX_VERSION=${{ matrix.build_env.nginx }}
+            #                 NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
 
             - name: Build and push Angie
               uses: docker/build-push-action@v5
@@ -95,8 +95,29 @@ jobs:
                 tags: ${{ secrets.DOCKERHUB_USERNAME }}/angie:proxy
                 build-args: |
                             ANGIE_VERSION=${{ matrix.build_env.angie }}
-                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}                
+                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}    
 
+            - name: Build and push Angie with Proxy and quicktls module
+              uses: docker/build-push-action@v5
+              with:
+                context: .
+                file: ./angie/angieproxyquicktls.dockerfile
+                push: true
+                tags: ${{ secrets.DOCKERHUB_USERNAME }}/angie:proxy3
+                build-args: |
+                            ANGIE_VERSION=${{ matrix.build_env.angie }}
+                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}   
+
+            - name: Build and push Angie with Proxy module for DEB
+              uses: docker/build-push-action@v5
+              with:
+                context: .
+                file: ./angie/angiedeb2.dockerfile
+                push: true
+                tags: ${{ secrets.DOCKERHUB_USERNAME }}/angie:deb
+                build-args: |
+                            ANGIE_VERSION=${{ matrix.build_env.angie }}
+                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}                   
             # - name: Get Nginx Deb
             #   shell: bash
             #   run:

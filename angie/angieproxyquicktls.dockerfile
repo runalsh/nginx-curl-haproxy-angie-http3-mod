@@ -120,7 +120,10 @@ RUN cd /tmp/build/angie/angie-${ANGIE_VERSION} && \
 RUN cd /tmp/build/angie/angie-${ANGIE_VERSION} && \
     make -j$proc && \
     make install DESTDIR=/tmp/build/angie/angie-release-build && \
-    ls -la /tmp/build/angie/angie-release-build
+    ls -la /tmp/build/angie/angie-release-build && \
+    curl -o /etc/apk/keys/angie-signing.rsa https://angie.software/keys/angie-signing.rsa && \
+    echo "https://download.angie.software/angie/alpine/v$(egrep -o '[0-9]+\.[0-9]+' /etc/alpine-release)/main" >> /etc/apk/repositories && \
+    apk add --no-cache angie-console-light
 
 RUN apk del .build-deps
 
@@ -135,14 +138,10 @@ ARG NGINX_HTTP_PROXY_CONNECT_MODULE
 COPY --from=builder /tmp/build/angie/angie-release-build/usr /usr
 COPY --from=builder /tmp/build/angie/angie-release-build/var /var
 COPY --from=builder /tmp/build/angie/angie-release-build/etc /etc
-COPY --from=builder /tmp/build/angie/angie-release-build/tmp /tmp
+COPY --from=builder /usr/share/angie-console-light /usr/share/angie-console-light
 
 RUN addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie --uid 101 --no-create-home
-
-RUN apk add --no-cache ca-certificates curl && \
-    curl -o /etc/apk/keys/angie-signing.rsa https://angie.software/keys/angie-signing.rsa && \
-    echo "https://download.angie.software/angie/alpine/v$(egrep -o '[0-9]+\.[0-9]+' /etc/alpine-release)/main" >> /etc/apk/repositories && \
-    apk add --no-cache angie-console-light && \
+RUN apk add --no-cache ca-certificates pcre && \
     # && ln -sf /dev/stdout /var/log/angie/access.log \
     ln -sf /dev/stderr /var/log/angie/error.log
 

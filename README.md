@@ -38,10 +38,10 @@ Angie 1.5.0 with ngx_http_proxy_connect_module 0.0.6 and http/3 (openssl)
     alpine:3.19 : docker pull runalsh/angie:latest (19MB unp)
 
     /angie/angieproxy.dockerfile
-    alpine:3.19 with ngx_http_proxy_connect_module: docker pull runalsh/angie:proxy (27MB unp)
+    alpine:3.19 with ngx_http_proxy_connect_module: docker pull runalsh/angie:proxy (21MB unp)
 
     /angie/angieproxyquicktls.dockerfile
-    alpine:3.19 with ngx_http_proxy_connect_module and quicktls: docker pull runalsh/angie:proxy3 (34MB unp)
+    alpine:3.19 with ngx_http_proxy_connect_module and quicktls: docker pull runalsh/angie:proxy3 (27MB unp)
 
     /angie/angiedeb2.dockerfile
     debian 12 slim with ngx_http_proxy_connect_module: docker pull runalsh/angie:proxydeb (89mb unp)
