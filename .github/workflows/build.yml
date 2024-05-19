@@ -35,7 +35,7 @@ jobs:
             - name: Build and push HAproxy ${{ matrix.build_env.haproxy }}
               uses: docker/build-push-action@v5
               with:
-                context: .
+                context: ./haproxy
                 file: ./haproxy/Dockerfile.alpine
                 push: true
                 tags: ${{ secrets.DOCKERHUB_USERNAME }}/haproxy:latest, ${{ secrets.DOCKERHUB_USERNAME }}/haproxy:${{ matrix.build_env.haproxy }}
@@ -137,7 +137,7 @@ jobs:
             - name: Build and push Angie with Proxy module for DEB
               uses: docker/build-push-action@v5
               with:
-                context: .
+                context: ./angie
                 file: ./angie/angiedeb2.dockerfile
                 push: true
                 tags: ${{ secrets.DOCKERHUB_USERNAME }}/angie:deb
