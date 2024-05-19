@@ -8,9 +8,6 @@ RUN export LANGUAGE=en_US.UTF-8 && export LC_ALL=en_US.UTF-8 && export LANG=en_U
 ARG CURL_VERSION
 ARG QUICHE_VERSION
 
-ENV CURL_VERSION $CURL_VERSION
-ENV QUICHE_VERSION $QUICHE_VERSION
-
 RUN apt-get update && \
     apt-get --no-install-recommends --no-install-suggests -y install locales wget ca-certificates curl openssl gnupg2 apt-transport-https unzip make libpcre3-dev zlib1g-dev build-essential devscripts debhelper quilt lsb-release libssl-dev lintian uuid-dev && \
     apt-get --no-install-recommends --no-install-suggests -y install git libnghttp2-dev libtool autoconf automake libbrotli-dev pkg-config cmake  && \

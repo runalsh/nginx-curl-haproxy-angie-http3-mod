@@ -1,20 +1,20 @@
-FROM golang:alpine3.19 as builder
+FROM golang:alpine as builder
 
 ENV HAPROXY_VERSION 2.9.7
-ENV HAPROXY_MAJOR_VERSION 2.9
-
 ENV QUICTLS_VERSION 3.1.5
 
-RUN apk add --no-cache gcc ca-certificates libc-dev linux-headers make openssl-dev pcre2-dev readline-dev tar zlib-dev
-RUN apk add --no-cache wget ca-certificates cmake g++ gcc git libc-dev libressl linux-headers make pcre2-dev perl readline-dev tar zlib-dev pcre2
+ARG HAPROXY_VERSION
+ARG HAPROXY_MAJOR_VERSION
+ARG QUICTLS_VERSION
 
+RUN apk add --no-cache gcc ca-certificates libc-dev linux-headers make openssl-dev pcre2-dev readline-dev tar zlib-dev wget ca-certificates cmake g++ gcc git libc-dev libressl linux-headers make pcre2-dev perl readline-dev tar zlib-dev pcre2
 
 RUN mkdir -p /tmp/build/quictls && \
     cd /tmp/build/quictls && \
-    wget "https://github.com/quictls/openssl/archive/refs/tags/openssl-$QUICTLS_VERSION-quic1.tar.gz" && \
-    tar -xzf openssl-$QUICTLS_VERSION-quic1.tar.gz
+    wget "https://github.com/quictls/openssl/archive/refs/tags/openssl-${QUICTLS_VERSION}-quic1.tar.gz" && \
+    tar -xzf openssl-${QUICTLS_VERSION}-quic1.tar.gz
     
-RUN cd /tmp/build/quictls/openssl-openssl-$QUICTLS_VERSION-quic1 && \
+RUN cd /tmp/build/quictls/openssl-openssl-${QUICTLS_VERSION}-quic1 && \
     ./config --libdir=lib --prefix=/opt/quictls && \
     make -j $proc && \
     make install DESTDIR="/tmp/build/quictls/quictls-build" && \
@@ -22,17 +22,22 @@ RUN cd /tmp/build/quictls/openssl-openssl-$QUICTLS_VERSION-quic1 && \
 
 RUN mkdir -p /tmp/build/haproxy && \
     cd /tmp/build/haproxy && \
-    wget "http://www.haproxy.org/download/$HAPROXY_MAJOR_VERSION/src/haproxy-$HAPROXY_VERSION.tar.gz" && \
-    tar -xzf haproxy-$HAPROXY_VERSION.tar.gz
+    wget "https://www.haproxy.org/download/$(echo ${HAPROXY_VERSION} | awk -F. '{print $1"."$2}')/src/haproxy-${HAPROXY_VERSION}.tar.gz" && \
+    tar -xzf haproxy-${HAPROXY_VERSION}.tar.gz
     
-RUN cd /tmp/build/haproxy/haproxy-$HAPROXY_VERSION && \
+RUN cd /tmp/build/haproxy/haproxy-${HAPROXY_VERSION} && \
     make -j $proc all \
         TARGET=linux-musl CPU=generic \
-        USE_PCRE2=1 USE_PCRE2_JIT=1 \
-        USE_TFO=1 USE_LINUX_TPROXY=1 \
+        USE_PCRE2=1 \
+        USE_PCRE2_JIT=1 \
+        USE_TFO=1 \
+        USE_LINUX_TPROXY=1 \
         USE_PROMEX=1 \
-        USE_OPENSSL=1 USE_PTHREAD_EMULATION=1 \
-        SSL_INC=/opt/quictls/include SSL_LIB=/opt/quictls/lib USE_QUIC=1 \
+        USE_OPENSSL=1 \
+        USE_PTHREAD_EMULATION=1 \
+        SSL_INC=/opt/quictls/include \
+        SSL_LIB=/opt/quictls/lib \
+        USE_QUIC=1 \
         USE_ZLIB=1 \
         USE_PROMEX=1 \
         LDFLAGS="-L/opt/quictls/lib -Wl,-rpath,/opt/quictls/lib" && \
@@ -40,15 +45,18 @@ RUN cd /tmp/build/haproxy/haproxy-$HAPROXY_VERSION && \
     /tmp/build/haproxy/haproxy-build/usr/local/sbin/haproxy -v
 
 
-FROM alpine:3.19
+FROM alpine
 
 ENV HAPROXY_VERSION 2.9.7
 ENV HAPROXY_MAJOR_VERSION 2.9
-
 ENV QUICTLS_VERSION 3.1.5
 
+ARG HAPROXY_VERSION
+ARG HAPROXY_MAJOR_VERSION
+ARG QUICTLS_VERSION
+
 COPY --from=builder /tmp/build/haproxy/haproxy-build/usr/local/sbin/haproxy /usr/local/sbin/haproxy
-COPY --from=builder /tmp/build/haproxy/haproxy-$HAPROXY_VERSION/examples/errorfiles /usr/local/etc/haproxy/errors
+COPY --from=builder /tmp/build/haproxy/haproxy-${HAPROXY_VERSION}/examples/errorfiles /usr/local/etc/haproxy/errors
 COPY --from=builder /tmp/build/quictls/quictls-build/opt/quictls /opt/quictls
 RUN rm -rf /opt/quictls/share 
 # :D
