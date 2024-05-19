@@ -7,7 +7,7 @@ ENV NGINX_HTTP_PROXY_CONNECT_MODULE 0.0.6
 ARG ANGIE_VERSION
 ARG NGINX_HTTP_PROXY_CONNECT_MODULE
 
-RUN apk add --no-cache --virtual .build-deps build-base wget ca-certificates gnupg unzip make zlib-dev pkgconfig libtool cmake automake autoconf build-base linux-headers pcre-dev wget zlib-dev ca-certificates uwsgi uwsgi-python3 supervisor cmake samurai libunwind-dev linux-headers perl-dev libstdc++  libssl3 libcrypto3 openssl openssl-dev git luajit-dev libxslt-dev
+RUN apk add --no-cache --virtual .build-deps build-base wget ca-certificates gnupg unzip make zlib-dev pkgconfig libtool cmake automake autoconf build-base linux-headers pcre-dev wget curl zlib-dev ca-certificates uwsgi uwsgi-python3 supervisor cmake samurai libunwind-dev linux-headers perl-dev libstdc++  libssl3 libcrypto3 openssl openssl-dev git luajit-dev libxslt-dev
 
 COPY --from=golang:alpine /usr/local/go/ /usr/local/go/
 ENV PATH="/usr/local/go/bin:${PATH}"
@@ -102,7 +102,7 @@ RUN cd /tmp/build/angie/angie-${ANGIE_VERSION} && \
     --with-openssl="/tmp/build/module/openssl" \
     --with-openssl-opt=enable-ktls \
     --with-openssl-opt=enable-ec_nistp_64_gcc_128 \
-    --with-ld-opt='-Wl,--as-needed,-O1,--sort-common -Wl,-z,pack-relative-relocs' \ 
+    --with-ld-opt='-Wl,--as-needed,-O1,--sort-common -Wl,-z,pack-relative-relocs' \
     --with-cc-opt="-O2 -g -m64 -march=westmere -falign-functions=32 -flto -funsafe-math-optimizations -fstack-protector-strong --param=ssp-buffer-size=4 -Wimplicit-fallthrough=0 -Wno-error=strict-aliasing -Wformat -Wno-error=pointer-sign -Wno-implicit-function-declaration -Wno-int-conversion -Wno-error=unused-result -Wno-unused-result -fcode-hoisting -Werror=format-security -Wno-deprecated-declarations -Wp,-D_FORTIFY_SOURCE=2 -DTCP_FASTOPEN=23 -fPIC" \
     --add-module="/tmp/build/module/ngx_http_proxy_connect_module-${NGINX_HTTP_PROXY_CONNECT_MODULE}" 
    
@@ -135,21 +135,21 @@ ARG NGINX_HTTP_PROXY_CONNECT_MODULE
 COPY --from=builder /tmp/build/angie/angie-release-build/usr /usr
 COPY --from=builder /tmp/build/angie/angie-release-build/var /var
 COPY --from=builder /tmp/build/angie/angie-release-build/etc /etc
+COPY --from=builder /tmp/build/angie/angie-release-build/tmp /tmp
 
 RUN addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie --uid 101 --no-create-home
 
-RUN apk add --no-cache ca-certificates curl \
-    && curl -o /etc/apk/keys/angie-signing.rsa https://angie.software/keys/angie-signing.rsa \
-    && echo "https://download.angie.software/angie/alpine/v$(egrep -o \
-        '[0-9]+\.[0-9]+' /etc/alpine-release)/main" >> /etc/apk/repositories \
-    && apk add --no-cache angie-console-light \
-    && rm /etc/apk/keys/angie-signing.rsa \
+RUN apk add --no-cache ca-certificates curl && \
+    curl -o /etc/apk/keys/angie-signing.rsa https://angie.software/keys/angie-signing.rsa && \
+    echo "https://download.angie.software/angie/alpine/v$(egrep -o '[0-9]+\.[0-9]+' /etc/alpine-release)/main" >> /etc/apk/repositories && \
+    apk add --no-cache angie-console-light && \
     # && ln -sf /dev/stdout /var/log/angie/access.log \
-    && ln -sf /dev/stderr /var/log/angie/error.log
+    ln -sf /dev/stderr /var/log/angie/error.log
 
-RUN mkdir -p /var/cache/angie && chown -R angie:angie /var/cache/angie && chmod -R g+w /var/cache/angie \
-    && chown -R angie:angie /etc/angie && chmod -R g+w /etc/angie && \
-    chown -R angie:angie /var/log/angie && chmod -R g+w /var/log/angie
+RUN mkdir -p /var/cache/angie && chown -R angie:angie /var/cache/angie && chmod -R g+w /var/cache/angie && \
+    chown -R angie:angie /etc/angie && chmod -R g+w /etc/angie && \
+    mkdir -p /var/log/angie && chown -R angie:angie /var/log/angie && chmod -R g+w /var/log/angie && \
+    mkdir -p /usr/lib/angie && chown -R angie:angie /usr/lib/angie && chmod -R g+w /usr/lib/angie
 
 EXPOSE 8080/tcp
 

@@ -54,6 +54,10 @@ RUN cd /tmp/build/angie/angie-${ANGIE_VERSION} && \
 #     git clone --depth=1  https://github.com/openresty/stream-lua-nginx-module && cd stream-lua-nginx-module && make install && cd /tmp/build/module && \
 #     export LUAJIT_LIB=/usr/local/lib/ && export LUAJIT_INC=/usr/local/include/luajit-2.1/
 
+
+# https://github.com/abbat/nginx-sla + https://github.com/ssmitienko/nginx-sla-prometheus
+
+
 RUN cd /tmp/build/angie/angie-${ANGIE_VERSION} && \
     ./configure \
     --prefix=/etc/angie --conf-path=/etc/angie/angie.conf \
