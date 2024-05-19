@@ -47,12 +47,23 @@ jobs:
               uses: docker/build-push-action@v5
               with:
                 context: ./curl
-                file: ./curl/Dockerfile
+                file: ./curl/alpine.dockerfile
                 push: true
                 tags: ${{ secrets.DOCKERHUB_USERNAME }}/curl:latest, ${{ secrets.DOCKERHUB_USERNAME }}/curl:${{ matrix.build_env.curl }}
                 build-args: |
                             QUICHE_VERSION=${{ matrix.build_env.quiche }}
                             CURL_VERSION=${{ matrix.build_env.curl }}
+
+            - name: Build and push Curl Deb ${{ matrix.build_env.curl }} quiche ${{ matrix.build_env.quiche }} 
+              uses: docker/build-push-action@v5
+              with:
+                context: ./curl
+                file: ./curl/deb.dockerfile
+                push: true
+                tags: ${{ secrets.DOCKERHUB_USERNAME }}/curl:deb
+                build-args: |
+                            QUICHE_VERSION=${{ matrix.build_env.quiche }}
+                            CURL_VERSION=${{ matrix.build_env.curl }}                
 
             - name: Build and push Nginx alpineopenssl ${{ matrix.build_env.nginx }} with proxy_connect ${{ matrix.build_env.httpconnect }}  
               uses: docker/build-push-action@v5
