@@ -18,8 +18,8 @@ Curl  with http/3 (quiche-boringssl)
 
     /curl/Dockerfile - just build and run 
 
-    alpine:3.16 version: docker pull runalsh/curl:alpine (43MB)
-    debian:12-slim version: docker pull runalsh/curl:latest (134MB)
+    alpine:3.19 version: docker pull runalsh/curl:latest (43MB)
+    debian:12-slim version: docker pull runalsh/curl:deb (134MB)
 
     docker run --rm runalsh/curl curl --version
     docker run --rm runalsh/curl curl -sIL https://blog.cloudflare.com --http3 -H 'user-agent: mozilla' | grep 'HTTP/3'    
