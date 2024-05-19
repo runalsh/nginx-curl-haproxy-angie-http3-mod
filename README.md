@@ -29,15 +29,21 @@ Curl 8.7.1 with http/3 (quiche-boringssl 0.20.1)
 
 HAproxy 2.9.7 with quicktlls 3.1.5
 
-    alpine:3.16 version: docker pull runalsh/haproxy:alpine (64MB - 22MB packed)
+    alpine:3.16 version: docker pull runalsh/haproxy:alpine (64MB unp - 22MB packed)
     docker run --rm runalsh/haproxy:alpine -vv
     
 Angie 1.5.0 with ngx_http_proxy_connect_module 0.0.6 and http/3 (openssl)
     
     /angie/angie.dockerfile
-    alpine:3.19 : docker pull runalsh/angie:latest (19MB)
+    alpine:3.19 : docker pull runalsh/angie:latest (19MB unp)
 
-     /angie/angie.dockerfile
-    alpine:3.19 with ngx_http_proxy_connect_module: docker pull runalsh/angie:proxy (27MB)
+    /angie/angieproxy.dockerfile
+    alpine:3.19 with ngx_http_proxy_connect_module: docker pull runalsh/angie:proxy (27MB unp)
+
+    /angie/angieproxyquicktls.dockerfile
+    alpine:3.19 with ngx_http_proxy_connect_module and quicktls: docker pull runalsh/angie:proxy3 (34MB unp)
+
+    /angie/angiedeb2.dockerfile
+    debian 12 slim with ngx_http_proxy_connect_module: docker pull runalsh/angie:proxydeb (89mb unp)
 
     
