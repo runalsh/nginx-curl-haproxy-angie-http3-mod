@@ -76,7 +76,7 @@ RUN echo "/lib:/usr/local/lib:/usr/lib:/opt/quictls/lib" > "/etc/ld-musl-$(uname
     ln -s /etc/ssl/certs /opt/quictls/ssl/certs
 
 COPY haproxy.cfg /usr/local/etc/haproxy
-COPY docker-entrypoint.sh /
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 
 STOPSIGNAL SIGUSR1
 USER haproxy
