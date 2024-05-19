@@ -9,8 +9,8 @@ ARG NGINX_HTTP_PROXY_CONNECT_MODULE
 
 RUN apt update && apt install -y --no-install-recommends ca-certificates curl wget lsb-release && \
     curl -o /etc/apt/trusted.gpg.d/angie-signing.gpg https://angie.software/keys/angie-signing.gpg  && \
-    echo "deb https://download.angie.software/angie/debian/ `lsb_release -cs` main" | tee /etc/apt/sources.list.d/angie.list > /dev/null && \
-    echo "deb-src https://download.angie.software/angie/debian/ `lsb_release -cs` main" | tee /etc/apt/sources.list.d/angie.list >/dev/null
+    echo "deb https://download.angie.software/angie/debian/ `lsb_release -cs` main" >> /etc/apt/sources.list.d/angie.list && \
+    echo "deb-src https://download.angie.software/angie/debian/ `lsb_release -cs` main" >> /etc/apt/sources.list.d/angie.list
 
 RUN cat <<EOF > /etc/apt/sources.list
 deb http://mirror.yandex.ru/debian/ `lsb_release -cs` main non-free-firmware
@@ -31,13 +31,12 @@ RUN mkdir -p /tmp/build/module && \
     cd ngx_http_proxy_connect_module-${NGINX_HTTP_PROXY_CONNECT_MODULE}
   
 RUN mkdir -p /tmp/build/angie && cd /tmp/build/angie && \
-    apt source angie && \
-    # apt source angie=$(apt-cache policy angie | grep ${ANGIE_VERSION}- | awk '{print $1}' | grep ${ANGIE_VERSION} |sort -V | tail -n 1) && \
+    apt source angie=$(apt-cache policy angie | grep ${ANGIE_VERSION}- | awk '{print $1}' | grep ${ANGIE_VERSION} |sort -V | tail -n 1) && \
     cd angie-${ANGIE_VERSION} && \
     patch -p1 < /tmp/build/module/ngx_http_proxy_connect_module-${NGINX_HTTP_PROXY_CONNECT_MODULE}/patch/proxy_connect_rewrite_102101.patch
 
-COPY angie/debrules /tmp/build/angie/angie-${ANGIE_VERSION}/debian/rules
-COPY angie/debcontrol /tmp/build/angie/angie-${ANGIE_VERSION}/debian/control
+COPY debrules /tmp/build/angie/angie-${ANGIE_VERSION}/debian/rules
+COPY debcontrol /tmp/build/angie/angie-${ANGIE_VERSION}/debian/control
 
 RUN cd /tmp/build/angie/angie-${ANGIE_VERSION} && \
     sed -i "s#--with-threads#--with-threads --add-module=/tmp/build/module/ngx_http_proxy_connect_module-${NGINX_HTTP_PROXY_CONNECT_MODULE}#g" debian/rules && \

@@ -32,10 +32,10 @@ HAproxy 2.9.7 with quicktlls 3.1.5
     alpine:3.16 version: docker pull runalsh/haproxy:alpine (64MB unp - 22MB packed)
     docker run --rm runalsh/haproxy:alpine -vv
     
-Angie 1.5.0 with ngx_http_proxy_connect_module 0.0.6 and http/3 (openssl)
+Angie 1.5.1 with ngx_http_proxy_connect_module 0.0.6, http/3, quicktlls 3.1.5
     
     /angie/angie.dockerfile
-    alpine:3.19 : docker pull runalsh/angie:latest (19MB unp)
+    alpine:3.19 openssl : docker pull runalsh/angie:latest (19MB unp)
 
     /angie/angieproxy.dockerfile
     alpine:3.19 with ngx_http_proxy_connect_module: docker pull runalsh/angie:proxy (21MB unp)

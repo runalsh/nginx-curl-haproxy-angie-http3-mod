@@ -32,34 +32,6 @@ RUN mkdir -p /tmp/build/module && \
     cd /tmp/build/module && \
     git clone --recursive --depth 1 -b openssl-${QUICTLS_VERSION}+quic https://github.com/quictls/openssl
 
-# RUN cd /tmp/build/module && \
-#     git clone --depth=1 https://github.com/vozlt/nginx-module-vts nginx-module-vts
-
-# RUN cd /tmp/build/module && \    
-#     git clone --depth=1 https://github.com/vozlt/nginx-module-sts nginx-module-sts && \
-#     git clone --depth=1 https://github.com/vozlt/nginx-module-stream-sts nginx-module-stream-sts
-
-# https://tengine.taobao.org/document/ngx_debug_pool.html
-# RUN cd /tmp/build/module && \
-#     git clone --depth=1  https://github.com/alibaba/tengine tengine
-
-# https://habr.com/ru/articles/680992/
-# https://github.com/openresty/lua-nginx-module#installation
-# https://github.com/chobits/ngx_http_proxy_connect_module/blob/master/t/http_proxy_connect.t#L113
-# https://github.com/Container-Projects/CentOS-Dockerfiles/blob/master/lua-nginx/install.sh
-# https://github.com/search?q=ngx_http_proxy_connect_module+lua_package_path&type=code
-# https://github.com/AHH0623/tengine-ingress/blob/999ee15cda5c50718e5791bdd91366895432d50b/images/tengine/rootfs/build.sh#L112
-# angie-module-lua
-# RUN cd /tmp/build/module && \
-#     git clone --depth=1  https://github.com/openresty/lua-nginx-module && \
-#     git clone --depth=1  https://github.com/vision5/ngx_devel_kit && \
-#     git clone --depth=1  https://github.com/openresty/luajit2 && cd luajit2 && make && make install && cd /tmp/build/module && \
-#     git clone --depth=1  https://github.com/openresty/lua-resty-core && cd lua-resty-core && mkdir -p /usr/local/lib/lua/resty/core && make install && cd /tmp/build/module && \
-#     git clone --depth=1  https://github.com/openresty/lua-resty-lrucache && cd lua-resty-lrucache && make install && cd /tmp/build/module && \
-#     git clone --depth=1  https://github.com/openresty/lua-upstream-nginx-module && cd lua-upstream-nginx-module && make install && cd /tmp/build/module && \
-#     git clone --depth=1  https://github.com/openresty/stream-lua-nginx-module && cd stream-lua-nginx-module && make install && cd /tmp/build/module && \
-#     export LUAJIT_LIB=/usr/local/lib/ && export LUAJIT_INC=/usr/local/include/luajit-2.1/
-
 RUN cd /tmp/build/angie/angie-${ANGIE_VERSION} && \
     ./configure \
     --prefix=/etc/angie \ 
