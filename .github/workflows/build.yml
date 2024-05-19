@@ -41,7 +41,7 @@ jobs:
                 tags: ${{ secrets.DOCKERHUB_USERNAME }}/haproxy:latest, ${{ secrets.DOCKERHUB_USERNAME }}/haproxy:${{ matrix.build_env.haproxy }}
                 build-args: |
                             HAPROXY_VERSION=${{ matrix.build_env.haproxy }}
-                            QUICTLS_VERSION=${{ matrix.build_env.nginx }}
+                            QUICTLS_VERSION=${{ matrix.build_env.quictls }}
 
             - name: Build and push Curl ${{ matrix.build_env.curl }} quiche ${{ matrix.build_env.quiche }} 
               uses: docker/build-push-action@v5
