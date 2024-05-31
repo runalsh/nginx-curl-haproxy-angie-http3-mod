@@ -38,7 +38,6 @@ RUN cd /tmp/build/haproxy/haproxy-${HAPROXY_VERSION} && \
         SSL_LIB=/opt/quictls/lib \
         USE_QUIC=1 \
         USE_ZLIB=1 \
-        USE_PROMEX=1 \
         LDFLAGS="-L/opt/quictls/lib -Wl,-rpath,/opt/quictls/lib" && \
     make TARGET=linux-musl install-bin DESTDIR="/tmp/build/haproxy/haproxy-build" && \
     /tmp/build/haproxy/haproxy-build/usr/local/sbin/haproxy -v

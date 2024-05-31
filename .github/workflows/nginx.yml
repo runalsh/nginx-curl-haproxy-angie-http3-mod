@@ -1,6 +1,9 @@
 name: build
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - nginx/**
 permissions:
   contents: write
 jobs:
@@ -12,12 +15,10 @@ jobs:
                 build_env:
                 - nginx: "1.26.0"
                   httpconnect: "0.0.6"
-                  curl: "8.7.1"
                   quiche: "0.21.0"
                   boring: "0568c2c"
                   quictls: "3.1.5"
-                  angie: "1.5.1"
-                  haproxy: "2.9.7"
+
 
         steps:
             - name: Checkout
@@ -30,40 +31,7 @@ jobs:
                 password: ${{ secrets.DOCKERHUB_TOKEN }}
     
             - name: Set up Docker Buildx
-              uses: docker/setup-buildx-action@v3
-            
-            - name: Build and push HAproxy ${{ matrix.build_env.haproxy }} quicktls ${{ matrix.build_env.nginx }}
-              uses: docker/build-push-action@v5
-              with:
-                context: ./haproxy
-                file: ./haproxy/Dockerfile.alpine
-                push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/haproxy:latest, ${{ secrets.DOCKERHUB_USERNAME }}/haproxy:${{ matrix.build_env.haproxy }}
-                build-args: |
-                            HAPROXY_VERSION=${{ matrix.build_env.haproxy }}
-                            QUICTLS_VERSION=${{ matrix.build_env.quictls }}
-
-            - name: Build and push Curl ${{ matrix.build_env.curl }} quiche ${{ matrix.build_env.quiche }} 
-              uses: docker/build-push-action@v5
-              with:
-                context: ./curl
-                file: ./curl/alpine.dockerfile
-                push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/curl:latest, ${{ secrets.DOCKERHUB_USERNAME }}/curl:${{ matrix.build_env.curl }}
-                build-args: |
-                            QUICHE_VERSION=${{ matrix.build_env.quiche }}
-                            CURL_VERSION=${{ matrix.build_env.curl }}
-
-            - name: Build and push Curl Deb ${{ matrix.build_env.curl }} quiche ${{ matrix.build_env.quiche }} 
-              uses: docker/build-push-action@v5
-              with:
-                context: ./curl
-                file: ./curl/deb.dockerfile
-                push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/curl:deb
-                build-args: |
-                            QUICHE_VERSION=${{ matrix.build_env.quiche }}
-                            CURL_VERSION=${{ matrix.build_env.curl }}                
+              uses: docker/setup-buildx-action@v3     
 
             - name: Build and push Nginx alpineopenssl ${{ matrix.build_env.nginx }} with proxy_connect ${{ matrix.build_env.httpconnect }}  
               uses: docker/build-push-action@v5
@@ -111,50 +79,7 @@ jobs:
                 build-args: |
                             NGINX_VERSION=${{ matrix.build_env.nginx }}
                             NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
-
-            - name: Build and push Angie ${{ matrix.build_env.angie }}
-              uses: docker/build-push-action@v5
-              with:
-                context: ./angie
-                file: ./angie/angie.dockerfile
-                push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/angie:latest
-                build-args: |
-                            ANGIE_VERSION=${{ matrix.build_env.angie }}
-
-            - name: Build and push Angie ${{ matrix.build_env.angie }} with proxy_connect ${{ matrix.build_env.httpconnect }}  
-              uses: docker/build-push-action@v5
-              with:
-                context: ./angie
-                file: ./angie/angieproxy.dockerfile
-                push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/angie:proxy
-                build-args: |
-                            ANGIE_VERSION=${{ matrix.build_env.angie }}
-                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}    
-
-            - name: Build and push Angie ${{ matrix.build_env.angie }} with proxy_connect ${{ matrix.build_env.httpconnect }} and quicktls ${{ matrix.build_env.quictls }}
-              uses: docker/build-push-action@v5
-              with:
-                context: ./angie
-                file: ./angie/angieproxyquicktls.dockerfile
-                push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/angie:proxy3
-                build-args: |
-                            ANGIE_VERSION=${{ matrix.build_env.angie }}
-                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}   
-                            QUICTLS_VERSION=${{ matrix.build_env.quictls }}
-
-            - name: Build and push Angie DEB ${{ matrix.build_env.angie }} with proxy_connect ${{ matrix.build_env.httpconnect }}
-              uses: docker/build-push-action@v5
-              with:
-                context: ./angie
-                file: ./angie/angiedeb2.dockerfile
-                push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/angie:deb
-                build-args: |
-                            ANGIE_VERSION=${{ matrix.build_env.angie }}
-                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}                   
+                
             # - name: Get Nginx Deb
             #   shell: bash
             #   run:
