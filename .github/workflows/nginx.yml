@@ -62,7 +62,7 @@ jobs:
                 context: ./nginx
                 file: ./nginx/Dockerfile.alpinequictls
                 push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:quicssl, ${{ secrets.DOCKERHUB_USERNAME }}/nginx:quicssl-${{ matrix.build_env.nginx }}
+                tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:quictls, ${{ secrets.DOCKERHUB_USERNAME }}/nginx:quictls-${{ matrix.build_env.nginx }}
                 build-args: |
                             NGINX_VERSION=${{ matrix.build_env.nginx }}
                             NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
