@@ -1,4 +1,4 @@
-name: build
+name: build Curl
 on:
   workflow_dispatch:
   push:

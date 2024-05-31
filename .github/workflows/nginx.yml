@@ -1,4 +1,4 @@
-name: build
+name: build Nginx
 on:
   workflow_dispatch:
   push:
@@ -39,7 +39,7 @@ jobs:
                 context: ./nginx
                 file: ./nginx/Dockerfile.alpineopenssl
                 push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:openssl, ${{ secrets.DOCKERHUB_USERNAME }}/nginx:latest, ${{ secrets.DOCKERHUB_USERNAME }}/nginx:${{ matrix.build_env.nginx }} 
+                tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:openssl, ${{ secrets.DOCKERHUB_USERNAME }}/nginx:openssl-${{ matrix.build_env.nginx }} , ${{ secrets.DOCKERHUB_USERNAME }}/nginx:latest, ${{ secrets.DOCKERHUB_USERNAME }}/nginx:${{ matrix.build_env.nginx }} 
                 build-args: |
                             NGINX_VERSION=${{ matrix.build_env.nginx }}
                             NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
@@ -50,7 +50,7 @@ jobs:
                 context: ./nginx
                 file: ./nginx/Dockerfile.alpineboringssl
                 push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:boringssl
+                tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:boringssl, ${{ secrets.DOCKERHUB_USERNAME }}/nginx:boringssl-${{ matrix.build_env.nginx }}
                 build-args: |
                             NGINX_VERSION=${{ matrix.build_env.nginx }}
                             NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
@@ -62,7 +62,7 @@ jobs:
                 context: ./nginx
                 file: ./nginx/Dockerfile.alpinequictls
                 push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:quicssl
+                tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:quicssl, ${{ secrets.DOCKERHUB_USERNAME }}/nginx:quicssl-${{ matrix.build_env.nginx }}
                 build-args: |
                             NGINX_VERSION=${{ matrix.build_env.nginx }}
                             NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
@@ -75,7 +75,7 @@ jobs:
                 context: ./nginx
                 file: ./nginx/Dockerfile.builddeb
                 push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:deb
+                tags: ${{ secrets.DOCKERHUB_USERNAME }}/nginx:deb, ${{ secrets.DOCKERHUB_USERNAME }}/nginx:deb-${{ matrix.build_env.nginx }}
                 build-args: |
                             NGINX_VERSION=${{ matrix.build_env.nginx }}
                             NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
