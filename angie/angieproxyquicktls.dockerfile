@@ -1,5 +1,5 @@
 
-FROM alpine as builder
+FROM alpine:3.20 as builder
 
 ENV ANGIE_VERSION 1.5.0
 ENV NGINX_HTTP_PROXY_CONNECT_MODULE 0.0.6
@@ -101,7 +101,7 @@ RUN cd /tmp/build/angie/angie-${ANGIE_VERSION} && \
 
 RUN apk del .build-deps
 
-FROM alpine
+FROM alpine:3.20
 
 ENV ANGIE_VERSION 1.5.0
 ENV NGINX_HTTP_PROXY_CONNECT_MODULE 0.0.6
