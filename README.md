@@ -1,6 +1,6 @@
-Nginx with ngx_http_proxy_connect_module and quic-http/3
+Current versions: Nginx 1.27.0, Angie 1.5.1, Curl 8.8.0, Haproxy 3.0.0, Quictls 3.1.5, Boringssl 0568c2c, http_connect_module 0.0.6
 
-    Release deb package https://github.com/runalsh/nginx-curl-http3-mod/releases/download/1.25.5-0.0.6/nginx_1.25.5_amd64.deb
+Nginx with ngx_http_proxy_connect_module and quic-http/3
     
     /nginx/Dockerfile.alpineopenssl
     alpine openssl version: docker pull runalsh/nginx:{latest,1.**.***,openssl} (12MB)
