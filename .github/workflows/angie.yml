@@ -77,11 +77,14 @@ jobs:
                             NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}                   
  
             - name: Create a container from the image Angie
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              continue-on-error: true
               run: |
                 docker create --name angie-${{ matrix.build_env.angie }} ${{ secrets.DOCKERHUB_USERNAME }}/angie:deb
                 docker cp angie-${{ matrix.build_env.angie }}:/tmp/angie/angie_${{ matrix.build_env.angie }}-1~bookworm_amd64.deb ./angie_${{ matrix.build_env.angie }}-1~bookworm_amd64.deb
                 ls -la 
-                apt-get install -y gh
+                sudo apt-get install -y gh
                 gh release create ${{ github.ref }} ./angie_${{ matrix.build_env.angie }}-1~bookworm_amd64.deb -t "Release ${{ github.ref }}" -n "Release notes"
 
             - name: Release
