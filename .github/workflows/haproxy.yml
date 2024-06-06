@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - haproxy/**
+      - .github/workflows/haproxy.yml
 permissions:
   contents: write
 jobs:

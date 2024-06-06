@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - angie/**
+      - .github/workflows/angie.yml
 permissions:
   contents: write
 jobs:
@@ -65,6 +66,7 @@ jobs:
 
             - name: Build and push Angie DEB ${{ matrix.build_env.angie }} with proxy_connect ${{ matrix.build_env.httpconnect }}
               uses: docker/build-push-action@v5
+              continue-on-error: true
               with:
                 context: ./angie
                 file: ./angie/angiedeb2.dockerfile

@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - nginx/**
+      - .github/workflows/nginx.yml
 permissions:
   contents: write
 jobs:

@@ -58,7 +58,7 @@ CONFIGURE_ADD ?=
 CONFIGURE_ENV ?=
 CC_OPT ?=
 LD_OPT ?=
-MAKE_TARGET ?=modules
+MAKE_TARGET ?=
 OBJS_DIR ?=
 
 %:
@@ -67,12 +67,12 @@ OBJS_DIR ?=
 override_dh_clean:
 	dh_clean
 
-	$(MAKE) -C luajit2-v2-1-20240314 clean
-	rm -Rf luajit2-v2-1-20240314/usr
+	# $(MAKE) -C luajit2-v2-1-20240314 clean
+	# rm -Rf luajit2-v2-1-20240314/usr
 
-	if [ -f module-njs-0-8-4/Makefile ]; then \
-		$(MAKE) -C module-njs-0-8-4 clean; \
-	fi
+	# if [ -f module-njs-0-8-4/Makefile ]; then \
+	# 	$(MAKE) -C module-njs-0-8-4 clean; \
+	# fi
 
 override_dh_auto_configure:
 	cp -Rp . ../angie-debug
@@ -165,12 +165,43 @@ override_dh_auto_build:
 	#                    LUAJIT_LIB=$(CURDIR)/luajit2-v2-1-20240314/usr/lib" \
 	#     OBJS_DIR=module-lua
 
-	# $(MAKE) -C lua-resty-core-v0-1-28 install \
-	#     DESTDIR=$(CURDIR)/module-lua/resty-libs LUA_LIB_DIR=
-	# $(MAKE) -C lua-resty-lrucache-v0-13 install \
-	#     DESTDIR=$(CURDIR)/module-lua/resty-libs LUA_LIB_DIR=
+	# mkdir $(CURDIR)/module-lua/lua-clibs $(CURDIR)/module-lua/lua-libs
 
-	# find module-lua/resty-libs -type f -exec chmod 644 {} \;
+	# cd lua-chronos-v0-2-4 && \
+	# 	cc -O2 -fPIC -I$(CURDIR)/luajit2-v2-1-20240314/src \
+	# 	   -c src/chronos.c -o src/chronos.o && \
+	# 	cc -shared -o $(CURDIR)/module-lua/lua-clibs/chronos.so src/chronos.o -lrt
+
+	# $(MAKE) -C lua-cjson-2-1-0 install \
+	#     LUA_CMODULE_DIR=$(CURDIR)/module-lua/lua-clibs LUA_INCLUDE_DIR=$(CURDIR)/luajit2-v2-1-20240314/src
+
+	# cp -p lua-dumper-v0-1-1/dumper.lua \
+	#     $(CURDIR)/module-lua/lua-libs
+
+	# cp -p lua-inspect-v3-1-3/inspect.lua \
+	#     $(CURDIR)/module-lua/lua-libs
+
+	# $(MAKE) -C lua-resty-core-v0-1-28 install \
+	#     DESTDIR=$(CURDIR)/module-lua/lua-libs LUA_LIB_DIR=
+	# cp -Rp lua-resty-hmac-5f60e1a28b9fdd7939f0e1738171f0ca5fe22978/lib/resty/* \
+	#     $(CURDIR)/module-lua/lua-libs/resty
+	# $(MAKE) -C lua-resty-http-v0-17-2 install \
+	#     DESTDIR=$(CURDIR)/module-lua/lua-libs LUA_LIB_DIR=
+	# cp -Rp lua-resty-jwt-v0-2-3/lib/resty/* \
+	#     $(CURDIR)/module-lua/lua-libs/resty
+	# $(MAKE) -C lua-resty-lrucache-v0-13 install \
+	#     DESTDIR=$(CURDIR)/module-lua/lua-libs LUA_LIB_DIR=
+	# cp -Rp lua-resty-openidc-v1-7-6/lib/resty/* \
+	#     $(CURDIR)/module-lua/lua-libs/resty
+	# $(MAKE) -C lua-resty-openssl-1-4-0 install \
+	#     DESTDIR=$(CURDIR)/module-lua/lua-libs LUA_LIB_DIR=
+	# cp -Rp lua-resty-session-v3-10/lib/resty/* \
+	#     $(CURDIR)/module-lua/lua-libs/resty
+	# $(MAKE) -C lua-resty-string-v0-15 install \
+	#     DESTDIR=$(CURDIR)/module-lua/lua-libs LUA_LIB_DIR=
+
+	# find module-lua/lua-clibs -type f -exec chmod 755 {} \;
+	# find module-lua/lua-libs -type f -exec chmod 644 {} \;
 
 	# cp debian/README-module-lua module-lua/README
 
@@ -270,7 +301,7 @@ override_dh_auto_build:
 	# $(MAKE) -j2
 
 	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
-	#     CONFIGURE_ADD=--add-dynamic-module=module-opentracing-v0-34-0/opentracing \
+	#     CONFIGURE_ADD=--add-dynamic-module=module-opentracing-v0-35-2/opentracing \
 	#     CC_OPT="-I$(CURDIR)/sandbox/include" \
 	#     LD_OPT="-L$(CURDIR)/sandbox/lib" \
 	#     OBJS_DIR=module-opentracing
@@ -280,6 +311,109 @@ override_dh_auto_build:
 	#    module-opentracing
 	# cp zipkin-cpp-opentracing-966416e4d6aec23f572730aede6c087ccce6d194/.build/zipkin_opentracing/libzipkin_opentracing_plugin.so \
 	#    module-opentracing
+
+	# cd c-ares-cares-1-27-0 && \
+	# mkdir .build && cd .build && \
+	# cmake -DCMAKE_INSTALL_PREFIX=$(CURDIR)/sandbox \
+	#       -DCMAKE_PREFIX_PATH=$(CURDIR)/sandbox \
+	#       -DCMAKE_VERBOSE_MAKEFILE=ON \
+	#       -DCARES_STATIC=ON \
+	#       -DCARES_SHARED=OFF \
+	#       -DCARES_STATIC_PIC=ON \
+	#       .. && \
+	# $(MAKE) -j2 install
+
+	# cd abseil-cpp-20211102-0 && \
+	# mkdir .build && cd .build && \
+	# cmake -DCMAKE_CXX_STANDARD=11 \
+	#       -DCMAKE_INSTALL_PREFIX=$(CURDIR)/sandbox \
+	#       -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+	#       -DCMAKE_PREFIX_PATH=$(CURDIR)/sandbox \
+	#       -DCMAKE_VERBOSE_MAKEFILE=ON \
+	#       -DABSL_PROPAGATE_CXX_STD=ON \
+	#       .. && \
+	# $(MAKE) -j2 install
+
+	# cd re2-2024-03-01 && \
+	# mkdir .build && cd .build && \
+	# cmake -DCMAKE_CXX_STANDARD=11 \
+	#       -DCMAKE_INSTALL_PREFIX=$(CURDIR)/sandbox \
+	#       -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+	#       -DCMAKE_PREFIX_PATH=$(CURDIR)/sandbox \
+	#       -DCMAKE_VERBOSE_MAKEFILE=ON \
+	#       .. && \
+	# $(MAKE) -j2 install
+
+	# cd protobuf-v3-19-5 && \
+	# mkdir .build && cd .build && \
+	# cmake -DCMAKE_CXX_STANDARD=11 \
+	#       -DCMAKE_INSTALL_PREFIX=$(CURDIR)/sandbox \
+	#       -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+	#       -DCMAKE_PREFIX_PATH=$(CURDIR)/sandbox \
+	#       -DCMAKE_VERBOSE_MAKEFILE=ON \
+	#       -Dprotobuf_BUILD_TESTS=OFF \
+	#       ../cmake && \
+	# $(MAKE) -j2 install
+
+	# cd grpc-v1-46-7 && \
+	# touch third_party/opencensus-proto/src && \
+	# mkdir .build && cd .build && \
+	# cmake -DCMAKE_CXX_STANDARD=11 \
+	#       -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+	#       -DCMAKE_INSTALL_PREFIX=$(CURDIR)/sandbox \
+	#       -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+	#       -DCMAKE_PREFIX_PATH=$(CURDIR)/sandbox \
+	#       -DCMAKE_VERBOSE_MAKEFILE=ON \
+	#       -DgRPC_BUILD_CSHARP_EXT=OFF \
+	#       -DgRPC_BUILD_GRPC_CSHARP_PLUGIN=OFF \
+	#       -DgRPC_BUILD_GRPC_NODE_PLUGIN=OFF \
+	#       -DgRPC_BUILD_GRPC_OBJECTIVE_C_PLUGIN=OFF \
+	#       -DgRPC_BUILD_GRPC_PHP_PLUGIN=OFF \
+	#       -DgRPC_BUILD_GRPC_PYTHON_PLUGIN=OFF \
+	#       -DgRPC_BUILD_GRPC_RUBY_PLUGIN=OFF \
+	#       -DgRPC_ABSL_PROVIDER=package \
+	#       -DgRPC_CARES_PROVIDER=package \
+	#       -DgRPC_PROTOBUF_PROVIDER=package \
+	#       -DgRPC_RE2_PROVIDER=package \
+	#       -DgRPC_SSL_PROVIDER=package \
+	#       -DgRPC_ZLIB_PROVIDER=package \
+	#       .. && \
+	# $(MAKE) -j2 install
+
+	# cd opentelemetry-cpp-v1-11-0 && \
+	# mkdir .build && cd .build && \
+	# cmake -DCMAKE_CXX_STANDARD=11 \
+	#       -DCMAKE_INSTALL_PREFIX=$(CURDIR)/sandbox \
+	#       -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+	#       -DCMAKE_PREFIX_PATH=$(CURDIR)/sandbox \
+	#       -DCMAKE_VERBOSE_MAKEFILE=ON \
+	#       -DBUILD_TESTING=OFF \
+	#       -DOTELCPP_PROTO_PATH=$(CURDIR)/opentelemetry-proto-v1-0-0 \
+	#       -DWITH_ABSEIL=ON \
+	#       -DWITH_BENCHMARK=OFF \
+	#       -DWITH_EXAMPLES=OFF \
+	#       -DWITH_FUNC_TESTS=OFF \
+	#       .. && \
+	# $(MAKE) -j2 install
+
+	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
+	#     MAKE_TARGET=none \
+	#     OBJS_DIR=module-otel
+
+	# cd module-otel-v0-1-1 && \
+	# mkdir .build && cd .build && \
+	# cmake -DCMAKE_PREFIX_PATH=$(CURDIR)/sandbox \
+	#       -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+	#       -DCMAKE_VERBOSE_MAKEFILE=ON \
+	#       -DNGX_OTEL_FETCH_DEPS=OFF \
+	#       -DNGX_OTEL_NGINX_BUILD_DIR=$(CURDIR)/objs \
+	#       -DNGX_OTEL_PROTO_DIR=$(CURDIR)/opentelemetry-proto-v1-0-0 \
+	#       .. && \
+	# $(MAKE) -j2
+
+	# cp module-otel-v0-1-1/.build/ngx_otel_module.so \
+	#    module-otel
+	# cp debian/README-module-otel module-otel/README
 
 	# $(MAKE) -f $(lastword $(MAKEFILE_LIST)) _build \
 	#     CONFIGURE_ADD=--with-http_perl_module=dynamic \

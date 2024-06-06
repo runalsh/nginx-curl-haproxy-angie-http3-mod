@@ -1,6 +1,9 @@
 name: build Builder on Alpine latest
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/alpine-builder.yml
 permissions:
   contents: write
 jobs:
