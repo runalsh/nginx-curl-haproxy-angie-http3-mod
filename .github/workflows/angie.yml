@@ -80,24 +80,14 @@ jobs:
               run: |
                 docker create --name angie-${{ matrix.build_env.angie }} ${{ secrets.DOCKERHUB_USERNAME }}/angie:deb
                 docker cp angie-${{ matrix.build_env.angie }}:/tmp/angie/angie_${{ matrix.build_env.angie }}-1~bookworm_amd64.deb ./angie_${{ matrix.build_env.angie }}-1~bookworm_amd64.deb
+                ls -la 
+                apt-get install -y gh
+                gh release create ${{ github.ref }} ./angie_${{ matrix.build_env.angie }}-1~bookworm_amd64.deb -t "Release ${{ github.ref }}" -n "Release notes"
 
-            - name: Create Release Angie
-              id: create_release
-              uses: actions/create-release@v1
-              env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Release
+              uses: softprops/action-gh-release@v2
+              if: startsWith(github.ref, 'refs/tags/')
               with:
-                tag_name: ${{ github.ref }}
-                release_name: Release Angie-${{ matrix.build_env.angie }}
-                draft: false
-                prerelease: false
-
-            - name: Upload Release Asset Angie
-              uses: actions/upload-release-asset@v1
-              env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                upload_url: ${{ steps.create_release.outputs.upload_url }}
-                asset_path: ./angie_${{ matrix.build_env.angie }}-1~bookworm_amd64.deb
-                asset_name: angie_${{ matrix.build_env.angie }}-1~bookworm_amd64.deb
-                asset_content_type: application/octet-stream
+                files: |
+                  angie_${{ matrix.build_env.angie }}-1~bookworm_amd64.deb
+              # LICENSE
