@@ -64,17 +64,17 @@ jobs:
             #                 NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}   
             #                 QUICTLS_VERSION=${{ matrix.build_env.quictls }}
 
-            - name: Build and push Angie DEB ${{ matrix.build_env.angie }} with proxy_connect ${{ matrix.build_env.httpconnect }}
-              uses: docker/build-push-action@v5
-              continue-on-error: true
-              with:
-                context: ./angie
-                file: ./angie/angiedeb2.dockerfile
-                push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/angie:deb, ${{ secrets.DOCKERHUB_USERNAME }}/angie:deb-${{ matrix.build_env.angie }}
-                build-args: |
-                            ANGIE_VERSION=${{ matrix.build_env.angie }}
-                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}                   
+            # - name: Build and push Angie DEB ${{ matrix.build_env.angie }} with proxy_connect ${{ matrix.build_env.httpconnect }}
+            #   uses: docker/build-push-action@v5
+            #   continue-on-error: true
+            #   with:
+            #     context: ./angie
+            #     file: ./angie/angiedeb2.dockerfile
+            #     push: true
+            #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/angie:deb, ${{ secrets.DOCKERHUB_USERNAME }}/angie:deb-${{ matrix.build_env.angie }}
+            #     build-args: |
+            #                 ANGIE_VERSION=${{ matrix.build_env.angie }}
+            #                 NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}                   
  
             - name: Create a container from the image Angie
               env:
@@ -86,21 +86,13 @@ jobs:
                 ls -la 
                 sudo apt-get install -y gh
 
-            - name: Push Tag
+            - name: Push Angie ${{ matrix.build_env.angie }} deb to release
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               continue-on-error: true
               run: |
                   git config --global user.name '${{github.actor}}'
                   git config --global user.email '${{github.actor}}@users.noreply.github.com'
-                  git tag -a v1.0.0 -m "Version 1.0.0"
-                  git push origin v1.0.0
-                  gh release create v1.0.0 ./angie_${{ matrix.build_env.angie }}-1~bookworm_amd64.deb -t "Version 1.0.0" -n "Release notes"
-
-            - name: Release
-              uses: softprops/action-gh-release@v2
-              if: startsWith(github.ref, 'refs/tags/')
-              with:
-                files: |
-                  angie_${{ matrix.build_env.angie }}-1~bookworm_amd64.deb
-              # LICENSE
+                  git tag -a angie-${{ matrix.build_env.angie }} -m "Angie ${{ matrix.build_env.angie }}"
+                  git push origin angie-${{ matrix.build_env.angie }}
+                  gh release create angie-${{ matrix.build_env.angie }} ./angie_${{ matrix.build_env.angie }}-1~bookworm_amd64.deb -t "Angie ${{ matrix.build_env.angie }}" -n "Release notes"
