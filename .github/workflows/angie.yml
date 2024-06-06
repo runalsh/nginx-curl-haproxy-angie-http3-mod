@@ -76,3 +76,31 @@ jobs:
                             ANGIE_VERSION=${{ matrix.build_env.angie }}
                             NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}                   
  
+            - name: Create a container from the image
+              run: |
+                docker create --name angie-${{ matrix.build_env.angie }} ${{ secrets.DOCKERHUB_USERNAME }}/angie:deb
+
+            - name: Copy file from Docker container
+              run: |
+                docker cp angie-${{ matrix.build_env.angie }}:/tmp/angie/angie_${{ matrix.build_env.angie }}-1~bookworm_amd64.deb ./angie_${{ matrix.build_env.angie }}-1~bookworm_amd64.deb
+
+            - name: Create Release
+              id: create_release
+              uses: actions/create-release@v1
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                tag_name: ${{ github.ref }}
+                release_name: Release Angie-${{ matrix.build_env.angie }}
+                draft: false
+                prerelease: false
+
+            - name: Upload Release Asset
+              uses: actions/upload-release-asset@v1
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                upload_url: ${{ steps.create_release.outputs.upload_url }}
+                asset_path: ./angie_${{ matrix.build_env.angie }}-1~bookworm_amd64.deb
+                asset_name: angie_${{ matrix.build_env.angie }}-1~bookworm_amd64.deb
+                asset_content_type: application/octet-stream
