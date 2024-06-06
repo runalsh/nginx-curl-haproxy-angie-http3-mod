@@ -91,6 +91,8 @@ jobs:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               continue-on-error: true
               run: |
+                  git config --global user.name '${{github.actor}}'
+                  git config --global user.email '${{github.actor}}@users.noreply.github.com'
                   git tag -a v1.0.0 -m "Version 1.0.0"
                   git push origin v1.0.0
                   gh release create v1.0.0 ./angie_${{ matrix.build_env.angie }}-1~bookworm_amd64.deb -t "Version 1.0.0" -n "Release notes"
