@@ -31,38 +31,38 @@ jobs:
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3
 
-            - name: Build and push Angie ${{ matrix.build_env.angie }}
-              uses: docker/build-push-action@v5
-              with:
-                context: ./angie
-                file: ./angie/angie.dockerfile
-                push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/angie:latest, ${{ secrets.DOCKERHUB_USERNAME }}/angie:${{ matrix.build_env.angie }}
-                build-args: |
-                            ANGIE_VERSION=${{ matrix.build_env.angie }}
+            # - name: Build and push Angie ${{ matrix.build_env.angie }}
+            #   uses: docker/build-push-action@v5
+            #   with:
+            #     context: ./angie
+            #     file: ./angie/angie.dockerfile
+            #     push: true
+            #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/angie:latest, ${{ secrets.DOCKERHUB_USERNAME }}/angie:${{ matrix.build_env.angie }}
+            #     build-args: |
+            #                 ANGIE_VERSION=${{ matrix.build_env.angie }}
 
-            - name: Build and push Angie ${{ matrix.build_env.angie }} with proxy_connect ${{ matrix.build_env.httpconnect }}  
-              uses: docker/build-push-action@v5
-              with:
-                context: ./angie
-                file: ./angie/angieproxy.dockerfile
-                push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/angie:proxy, ${{ secrets.DOCKERHUB_USERNAME }}/angie:proxy-${{ matrix.build_env.angie }}
-                build-args: |
-                            ANGIE_VERSION=${{ matrix.build_env.angie }}
-                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}    
+            # - name: Build and push Angie ${{ matrix.build_env.angie }} with proxy_connect ${{ matrix.build_env.httpconnect }}  
+            #   uses: docker/build-push-action@v5
+            #   with:
+            #     context: ./angie
+            #     file: ./angie/angieproxy.dockerfile
+            #     push: true
+            #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/angie:proxy, ${{ secrets.DOCKERHUB_USERNAME }}/angie:proxy-${{ matrix.build_env.angie }}
+            #     build-args: |
+            #                 ANGIE_VERSION=${{ matrix.build_env.angie }}
+            #                 NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}    
 
-            - name: Build and push Angie ${{ matrix.build_env.angie }} with proxy_connect ${{ matrix.build_env.httpconnect }} and quicktls ${{ matrix.build_env.quictls }}
-              uses: docker/build-push-action@v5
-              with:
-                context: ./angie
-                file: ./angie/angieproxyquicktls.dockerfile
-                push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/angie:proxy3, ${{ secrets.DOCKERHUB_USERNAME }}/angie:proxy3-${{ matrix.build_env.angie }}
-                build-args: |
-                            ANGIE_VERSION=${{ matrix.build_env.angie }}
-                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}   
-                            QUICTLS_VERSION=${{ matrix.build_env.quictls }}
+            # - name: Build and push Angie ${{ matrix.build_env.angie }} with proxy_connect ${{ matrix.build_env.httpconnect }} and quicktls ${{ matrix.build_env.quictls }}
+            #   uses: docker/build-push-action@v5
+            #   with:
+            #     context: ./angie
+            #     file: ./angie/angieproxyquicktls.dockerfile
+            #     push: true
+            #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/angie:proxy3, ${{ secrets.DOCKERHUB_USERNAME }}/angie:proxy3-${{ matrix.build_env.angie }}
+            #     build-args: |
+            #                 ANGIE_VERSION=${{ matrix.build_env.angie }}
+            #                 NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}   
+            #                 QUICTLS_VERSION=${{ matrix.build_env.quictls }}
 
             - name: Build and push Angie DEB ${{ matrix.build_env.angie }} with proxy_connect ${{ matrix.build_env.httpconnect }}
               uses: docker/build-push-action@v5
@@ -76,15 +76,12 @@ jobs:
                             ANGIE_VERSION=${{ matrix.build_env.angie }}
                             NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}                   
  
-            - name: Create a container from the image
+            - name: Create a container from the image Angie
               run: |
                 docker create --name angie-${{ matrix.build_env.angie }} ${{ secrets.DOCKERHUB_USERNAME }}/angie:deb
-
-            - name: Copy file from Docker container
-              run: |
                 docker cp angie-${{ matrix.build_env.angie }}:/tmp/angie/angie_${{ matrix.build_env.angie }}-1~bookworm_amd64.deb ./angie_${{ matrix.build_env.angie }}-1~bookworm_amd64.deb
 
-            - name: Create Release
+            - name: Create Release Angie
               id: create_release
               uses: actions/create-release@v1
               env:
@@ -95,7 +92,7 @@ jobs:
                 draft: false
                 prerelease: false
 
-            - name: Upload Release Asset
+            - name: Upload Release Asset Angie
               uses: actions/upload-release-asset@v1
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
