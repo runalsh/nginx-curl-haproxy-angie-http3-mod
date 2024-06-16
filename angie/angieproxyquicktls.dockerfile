@@ -1,5 +1,6 @@
 
-FROM alpine:3.20 as builder
+# FROM alpine:3.20 as builder
+FROM runalsh/builder:alpine as builder
 
 ENV ANGIE_VERSION 1.5.0
 ENV NGINX_HTTP_PROXY_CONNECT_MODULE 0.0.6
@@ -9,10 +10,10 @@ ARG ANGIE_VERSION
 ARG NGINX_HTTP_PROXY_CONNECT_MODULE
 ARG QUICTLS_VERSION
 
-RUN apk add --no-cache --virtual .build-deps build-base wget ca-certificates gnupg unzip make zlib-dev pkgconfig libtool cmake automake autoconf build-base linux-headers pcre-dev wget curl zlib-dev ca-certificates uwsgi uwsgi-python3 supervisor cmake samurai libunwind-dev linux-headers perl-dev libstdc++  libssl3 libcrypto3 openssl openssl-dev git luajit-dev libxslt-dev
+# RUN apk add --no-cache --virtual .build-deps build-base wget ca-certificates gnupg unzip make zlib-dev pkgconfig libtool cmake automake autoconf build-base linux-headers pcre-dev wget curl zlib-dev ca-certificates uwsgi uwsgi-python3 supervisor cmake samurai libunwind-dev linux-headers perl-dev libstdc++  libssl3 libcrypto3 openssl openssl-dev git luajit-dev libxslt-dev
 
-COPY --from=golang:alpine /usr/local/go/ /usr/local/go/
-ENV PATH="/usr/local/go/bin:${PATH}"
+# COPY --from=golang:alpine /usr/local/go/ /usr/local/go/
+# ENV PATH="/usr/local/go/bin:${PATH}"
 
 RUN mkdir -p /tmp/build/angie && \
     cd /tmp/build/angie && \
@@ -99,7 +100,7 @@ RUN cd /tmp/build/angie/angie-${ANGIE_VERSION} && \
     echo "https://download.angie.software/angie/alpine/v$(egrep -o '[0-9]+\.[0-9]+' /etc/alpine-release)/main" >> /etc/apk/repositories && \
     apk add --no-cache angie-console-light
 
-RUN apk del .build-deps
+# RUN apk del .build-deps
 
 FROM alpine:3.20
 
