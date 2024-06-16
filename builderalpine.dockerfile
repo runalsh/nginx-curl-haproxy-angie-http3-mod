@@ -15,6 +15,11 @@ RUN apk add --no-cache build-base wget curl ca-certificates gnupg unzip make zli
 RUN wget https://sh.rustup.rs -O - | sh -s -- -y
 
 ENV PATH "${PATH}:$HOME/.cargo/bin"
+
+ENV PATH="/usr/local/go/bin:${PATH}"
+
+RUN go --version
+
 RUN cargo --version; rustc --version
 
 
