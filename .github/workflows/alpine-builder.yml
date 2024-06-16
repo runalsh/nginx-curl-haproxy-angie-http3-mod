@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - .github/workflows/alpine-builder.yml
+  schedule:
+    - cron: "0 0 * * 1"
 permissions:
   contents: write
 jobs:

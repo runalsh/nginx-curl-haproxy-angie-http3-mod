@@ -1,4 +1,6 @@
-FROM golang:alpine as builder
+# FROM golang:alpine as builder
+FROM runalsh/builder:alpine as builder
+
 
 ENV HAPROXY_VERSION 2.9.7
 ENV QUICTLS_VERSION 3.1.5
@@ -6,7 +8,7 @@ ENV QUICTLS_VERSION 3.1.5
 ARG HAPROXY_VERSION
 ARG QUICTLS_VERSION
 
-RUN apk add --no-cache gcc ca-certificates libc-dev linux-headers make openssl-dev pcre2-dev readline-dev tar zlib-dev wget ca-certificates cmake g++ gcc git libc-dev libressl linux-headers make pcre2-dev perl readline-dev tar zlib-dev pcre2
+# RUN apk add --no-cache gcc ca-certificates libc-dev linux-headers make openssl-dev pcre2-dev readline-dev tar zlib-dev wget ca-certificates cmake g++ gcc git libc-dev libressl linux-headers make pcre2-dev perl readline-dev tar zlib-dev pcre2
 
 RUN mkdir -p /tmp/build/quictls && \
     cd /tmp/build/quictls && \
