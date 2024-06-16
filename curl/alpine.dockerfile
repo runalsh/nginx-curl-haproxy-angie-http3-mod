@@ -1,6 +1,5 @@
 
-# FROM alpine:3.20 AS base
-FROM runalsh/builder:alpine AS base
+FROM alpine:3.20 AS base
 
 ENV CURL_VERSION 8.7.1
 ENV QUICHE_VERSION 0.20.1
@@ -10,23 +9,23 @@ ARG QUICHE_VERSION
 RUN mkdir -p /tmp/build/curl/cargo
 ENV HOME /tmp/build/curl/cargo
 
-# RUN apk add --no-cache \
-#   autoconf \
-#   automake \
-#   brotli-dev \
-#   build-base \
-#   cmake \
-#   git \
-#   libtool \
-#   nghttp2-dev \
-#   pkgconfig \
-#   wget \
-#   zlib-dev
+RUN apk add --no-cache \
+  autoconf \
+  automake \
+  brotli-dev \
+  build-base \
+  cmake \
+  git \
+  libtool \
+  nghttp2-dev \
+  pkgconfig \
+  wget \
+  zlib-dev
 
-# RUN wget https://sh.rustup.rs -O - | sh -s -- -y
+RUN wget https://sh.rustup.rs -O - | sh -s -- -y
 
-# ENV PATH "${PATH}:$HOME/.cargo/bin"
-# RUN cargo --version; rustc --version
+ENV PATH "${PATH}:$HOME/.cargo/bin"
+RUN cargo --version; rustc --version
 
 RUN cd /tmp/build/curl && \
   git clone -b ${QUICHE_VERSION} --depth 1 --single-branch https://github.com/cloudflare/quiche.git quiche-${QUICHE_VERSION} && \
