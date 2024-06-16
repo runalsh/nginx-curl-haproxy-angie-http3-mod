@@ -16,9 +16,6 @@ RUN wget https://sh.rustup.rs -O - | sh -s -- -y
 
 ENV PATH "${PATH}:$HOME/.cargo/bin:/usr/local/go/bin"
 
-RUN golang --version
-
-RUN cargo --version; rustc --version
 
 
 
