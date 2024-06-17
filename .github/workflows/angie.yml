@@ -32,7 +32,7 @@ jobs:
               uses: docker/setup-buildx-action@v3
 
             - name: Build and push Angie ${{ matrix.build_env.angie }}
-              uses: docker/build-push-action@v5
+              uses: docker/build-push-action@v6
               with:
                 context: ./angie
                 file: ./angie/angie.dockerfile
@@ -42,7 +42,7 @@ jobs:
                             ANGIE_VERSION=${{ matrix.build_env.angie }}
 
             - name: Build and push Angie ${{ matrix.build_env.angie }} with proxy_connect ${{ matrix.build_env.httpconnect }}  
-              uses: docker/build-push-action@v5
+              uses: docker/build-push-action@v6
               with:
                 context: ./angie
                 file: ./angie/angieproxy.dockerfile
@@ -53,7 +53,7 @@ jobs:
                             NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}    
 
             - name: Build and push Angie ${{ matrix.build_env.angie }} with proxy_connect ${{ matrix.build_env.httpconnect }} and quicktls ${{ matrix.build_env.quictls }}
-              uses: docker/build-push-action@v5
+              uses: docker/build-push-action@v6
               with:
                 context: ./angie
                 file: ./angie/angieproxyquicktls.dockerfile
@@ -65,7 +65,7 @@ jobs:
                             QUICTLS_VERSION=${{ matrix.build_env.quictls }}
 
             - name: Build and push Angie DEB ${{ matrix.build_env.angie }} with proxy_connect ${{ matrix.build_env.httpconnect }}
-              uses: docker/build-push-action@v5
+              uses: docker/build-push-action@v6
               continue-on-error: true
               with:
                 context: ./angie
