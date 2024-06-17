@@ -35,7 +35,7 @@ jobs:
               uses: docker/setup-buildx-action@v3     
 
             - name: Build and push Nginx alpineopenssl ${{ matrix.build_env.nginx }} with proxy_connect ${{ matrix.build_env.httpconnect }}  
-              uses: docker/build-push-action@v5
+              uses: docker/build-push-action@v6
               with:
                 context: ./nginx
                 file: ./nginx/Dockerfile.alpineopenssl
@@ -46,7 +46,7 @@ jobs:
                             NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}
 
             - name: Build and push Nginx ${{ matrix.build_env.nginx }} boringssl ${{ matrix.build_env.boring }} with proxy_connect ${{ matrix.build_env.httpconnect }}  
-              uses: docker/build-push-action@v5
+              uses: docker/build-push-action@v6
               with:
                 context: ./nginx
                 file: ./nginx/Dockerfile.alpineboringssl
@@ -58,7 +58,7 @@ jobs:
                             BORINGSSL_COMMIT=${{ matrix.build_env.boring }}
 
             - name: Build and push Nginx ${{ matrix.build_env.nginx }} quictls ${{ matrix.build_env.quictls }}  with proxy_connect ${{ matrix.build_env.httpconnect }}  
-              uses: docker/build-push-action@v5
+              uses: docker/build-push-action@v6
               with:
                 context: ./nginx
                 file: ./nginx/Dockerfile.alpinequictls
@@ -70,7 +70,7 @@ jobs:
                             QUICTLS_VERSION=${{ matrix.build_env.quictls }}
 
             - name: Build and push Nginx Deb ${{ matrix.build_env.nginx }} with proxy_connect ${{ matrix.build_env.httpconnect }}  
-              uses: docker/build-push-action@v5
+              uses: docker/build-push-action@v6
               continue-on-error: true
               with:
                 context: ./nginx
