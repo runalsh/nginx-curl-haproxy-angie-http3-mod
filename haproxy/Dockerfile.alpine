@@ -76,9 +76,6 @@ RUN echo "/lib:/usr/local/lib:/usr/lib:/opt/quictls/lib" > "/etc/ld-musl-$(uname
 COPY haproxy.cfg /usr/local/etc/haproxy
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 
-STOPSIGNAL SIGUSR1
-USER haproxy
-
 RUN haproxy -v
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
