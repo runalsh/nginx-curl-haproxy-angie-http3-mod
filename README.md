@@ -1,4 +1,4 @@
-Current versions: Nginx 1.27.0, Angie 1.5.2, Curl 8.8.0, Haproxy 3.0.0, Quictls 3.1.5, Boringssl 0568c2c, http_connect_module 0.0.6
+Current versions: Nginx 1.27.0, Angie 1.6.0, Curl 8.8.0, Haproxy 3.0.0, Quictls 3.1.5, Boringssl 0568c2c, http_connect_module 0.0.6
 
 Nginx with ngx_http_proxy_connect_module and quic-http/3
     
