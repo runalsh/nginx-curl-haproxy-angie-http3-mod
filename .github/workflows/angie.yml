@@ -64,6 +64,6 @@ jobs:
               run: |
                   git config --global user.name '${{github.actor}}'
                   git config --global user.email '${{github.actor}}@users.noreply.github.com'
-                  git tag -a "Angie v${{ matrix.build_env.angie }}" -m "Angie v${{ matrix.build_env.angie }}"
-                  git push origin "Angie v${{ matrix.build_env.angie }}"
-                  gh release create "Angie v${{ matrix.build_env.angie }}" ./angie_${{ matrix.build_env.angie }}-1_amd64.deb ./angie-console-light.deb -t "Angie v${{ matrix.build_env.angie }}" -n "Release notes"
+                  git tag -a "Angie${{ matrix.build_env.angie }}" -m "Angie${{ matrix.build_env.angie }}"
+                  git push origin "Angie${{ matrix.build_env.angie }}"
+                  gh release create "Angie${{ matrix.build_env.angie }}" ./angie_${{ matrix.build_env.angie }}-1_amd64.deb ./angie-console-light.deb -t "Angie${{ matrix.build_env.angie }}" -n "Release notes"
