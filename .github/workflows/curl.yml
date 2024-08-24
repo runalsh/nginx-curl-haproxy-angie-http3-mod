@@ -14,8 +14,8 @@ jobs:
         strategy:
             matrix:
                 build_env:
-                - curl: "8.8.0"
-                  quiche: "0.21.0"
+                - curl: "8.9.1"
+                  quiche: "0.22.0"
 
         steps:
             - name: Checkout
