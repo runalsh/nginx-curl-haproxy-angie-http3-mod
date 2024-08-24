@@ -14,9 +14,9 @@ jobs:
         strategy:
             matrix:
                 build_env:
-                - nginx: "1.27.0"
+                - nginx: "1.27.1"
                   httpconnect: "0.0.6"
-                  quiche: "0.21.0"
+                  quiche: "0.22.0"
                   boring: "0568c2c"
                   quictls: "3.1.5"
 
