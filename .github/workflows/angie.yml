@@ -31,7 +31,38 @@ jobs:
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3
 
-# fffffffffffffff
+            - name: Build and push Angie ${{ matrix.build_env.angie }}
+              uses: docker/build-push-action@v6
+              with:
+                context: ./angie
+                file: ./angie/angie.dockerfile
+                push: true
+                tags: ${{ secrets.DOCKERHUB_USERNAME }}/angie:latest, ${{ secrets.DOCKERHUB_USERNAME }}/angie:${{ matrix.build_env.angie }}
+                build-args: |
+                            ANGIE_VERSION=${{ matrix.build_env.angie }}
+
+            - name: Build and push Angie ${{ matrix.build_env.angie }} with proxy_connect ${{ matrix.build_env.httpconnect }}  
+              uses: docker/build-push-action@v6
+              with:
+                context: ./angie
+                file: ./angie/angieproxy.dockerfile
+                push: true
+                tags: ${{ secrets.DOCKERHUB_USERNAME }}/angie:proxy, ${{ secrets.DOCKERHUB_USERNAME }}/angie:proxy-${{ matrix.build_env.angie }}
+                build-args: |
+                            ANGIE_VERSION=${{ matrix.build_env.angie }}
+                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}    
+
+            - name: Build and push Angie ${{ matrix.build_env.angie }} with proxy_connect ${{ matrix.build_env.httpconnect }} and quicktls ${{ matrix.build_env.quictls }}
+              uses: docker/build-push-action@v6
+              with:
+                context: ./angie
+                file: ./angie/angieproxyquicktls.dockerfile
+                push: true
+                tags: ${{ secrets.DOCKERHUB_USERNAME }}/angie:proxy3, ${{ secrets.DOCKERHUB_USERNAME }}/angie:proxy3-${{ matrix.build_env.angie }}
+                build-args: |
+                            ANGIE_VERSION=${{ matrix.build_env.angie }}
+                            NGINX_HTTP_PROXY_CONNECT_MODULE=${{ matrix.build_env.httpconnect }}   
+                            QUICTLS_VERSION=${{ matrix.build_env.quictls }}
 
             - name: Build and push Angie DEB ${{ matrix.build_env.angie }} with proxy_connect ${{ matrix.build_env.httpconnect }}
               uses: docker/build-push-action@v6
