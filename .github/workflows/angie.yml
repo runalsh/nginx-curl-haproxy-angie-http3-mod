@@ -89,7 +89,7 @@ jobs:
 
             - name: Push Angie ${{ matrix.build_env.angie }} deb to release
               env:
-                GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
+                GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }} # ${{ secrets.GITHUB_TOKEN }}
                 token: ${{ secrets.WORKFLOW_TOKEN }}
               continue-on-error: true
               run: |
