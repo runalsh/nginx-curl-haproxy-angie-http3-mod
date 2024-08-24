@@ -14,7 +14,7 @@ jobs:
         strategy:
             matrix:
                 build_env:
-                - httpconnect: "0.0.6"
+                - httpconnect: "0.0.7"
                   quictls: "3.1.5"
                   angie: "1.6.1"
 
