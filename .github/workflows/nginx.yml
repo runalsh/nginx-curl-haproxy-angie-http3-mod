@@ -93,11 +93,12 @@ jobs:
 
             - name: Push Nginx ${{ matrix.build_env.nginx }} deb to release
               env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }} # ${{ secrets.GITHUB_TOKEN }}
+                token: ${{ secrets.WORKFLOW_TOKEN }}
               continue-on-error: true
               run: |
                   git config --global user.name '${{github.actor}}'
                   git config --global user.email '${{github.actor}}@users.noreply.github.com'
-                  git tag -a v${{ matrix.build_env.nginx }} -m "nginx ${{ matrix.build_env.nginx }}"
-                  git push origin v${{ matrix.build_env.nginx }}
-                  gh release create v${{ matrix.build_env.nginx }} ./nginx_${{ matrix.build_env.nginx }}_amd64.deb -t "nginx ${{ matrix.build_env.nginx }}" -n "Release notes"
+                  git tag -a "Nginx${{ matrix.build_env.nginx }}" -m "Nginx${{ matrix.build_env.nginx }}"
+                  git push origin "Nginx${{ matrix.build_env.nginx }}"
+                  gh release create "Nginx${{ matrix.build_env.nginx }}" ./nginx_${{ matrix.build_env.nginx }}_amd64.deb -t "Nginx${{ matrix.build_env.nginx }}" -n "Release notes"
