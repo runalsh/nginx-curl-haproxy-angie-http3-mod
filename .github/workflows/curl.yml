@@ -52,3 +52,24 @@ jobs:
                             QUICHE_VERSION=${{ matrix.build_env.quiche }}
                             CURL_VERSION=${{ matrix.build_env.curl }}
 
+            # - name: Create a container from the image curl ${{ matrix.build_env.curl }} deb
+            #   env:
+            #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            #   continue-on-error: true
+            #   run: |
+            #     docker create --name curl-${{ matrix.build_env.curl }} ${{ secrets.DOCKERHUB_USERNAME }}/curl:deb-${{ matrix.build_env.curl }}
+            #     docker cp curl-${{ matrix.build_env.curl }}:/tmp/curl_${{ matrix.build_env.curl }}_amd64.deb ./curl_${{ matrix.build_env.curl }}_amd64.deb
+            #     ls -la 
+            #     sudo apt-get install -y gh
+
+            # - name: Push Curl ${{ matrix.build_env.curl }} deb to release
+            #   env:
+            #     GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }} # ${{ secrets.GITHUB_TOKEN }}
+            #     token: ${{ secrets.WORKFLOW_TOKEN }}
+            #   continue-on-error: true
+            #   run: |
+            #       git config --global user.name '${{github.actor}}'
+            #       git config --global user.email '${{github.actor}}@users.noreply.github.com'
+            #       git tag -a "Curl${{ matrix.build_env.curl }}" -m "Curl${{ matrix.build_env.curl }}"
+            #       git push origin "Curl${{ matrix.build_env.curl }}"
+            #       gh release create "Curl${{ matrix.build_env.curl }}" ./curl_${{ matrix.build_env.curl }}_amd64.deb -t "Curl${{ matrix.build_env.curl }}" -n "Release notes"
