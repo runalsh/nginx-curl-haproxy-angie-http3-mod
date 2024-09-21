@@ -18,7 +18,7 @@ jobs:
                   httpconnect: "0.0.7"
                   quiche: "0.22.0"
                   boring: "0568c2c"
-                  quictls: "3.1.5"
+                  quictls: "3.1.7"
 
 
         steps:
