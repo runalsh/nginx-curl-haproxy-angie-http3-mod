@@ -1,5 +1,5 @@
 
-FROM alpine:3.20 AS base
+FROM alpine:3.21 AS base
 
 ENV CURL_VERSION 8.7.1
 ENV QUICHE_VERSION 0.20.1
@@ -56,7 +56,7 @@ RUN cd /tmp/build/curl && \
   make install && \
   ls -la /tmp/build/curl/curl-build
 
-  FROM alpine:3.20
+  FROM alpine:3.21
 
 ENV CURL_VERSION 8.7.1
 ENV QUICHE_VERSION 0.20.1
