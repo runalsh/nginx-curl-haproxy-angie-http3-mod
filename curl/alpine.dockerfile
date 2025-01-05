@@ -20,7 +20,8 @@ RUN apk add --no-cache \
   nghttp2-dev \
   pkgconfig \
   wget \
-  zlib-dev
+  zlib-dev \
+  libpsl
 
 RUN wget https://sh.rustup.rs -O - | sh -s -- -y
 
