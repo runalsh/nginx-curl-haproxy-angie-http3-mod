@@ -10,7 +10,7 @@ ARG QUICHE_VERSION
 
 RUN apt-get update && \
     apt-get --no-install-recommends --no-install-suggests -y install locales wget ca-certificates  openssl gnupg2 apt-transport-https unzip make libpcre3-dev zlib1g-dev build-essential devscripts debhelper quilt lsb-release libssl-dev lintian uuid-dev && \
-    apt-get --no-install-recommends --no-install-suggests -y install git libnghttp2-dev libtool autoconf automake libbrotli-dev pkg-config cmake  && \
+    apt-get --no-install-recommends --no-install-suggests -y install git libnghttp2-dev libtool autoconf automake libbrotli-dev  libpsl-dev pkg-config cmake  && \
     rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /tmp/build/curl/cargo
@@ -45,7 +45,6 @@ RUN cd /tmp/build/curl && \
     --with-nghttp2 \
     --with-openssl=/tmp/build/curl/quiche-${QUICHE_VERSION}/quiche/deps/boringssl/src \
     --with-quiche=/tmp/build/curl/quiche-${QUICHE_VERSION}/target/release \
-    --without-libpsl \
     --with-zlib && \
     make -j$proc && \
     make DESTDIR="/tmp/build/curl/curl-build/" install
