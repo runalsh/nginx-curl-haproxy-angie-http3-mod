@@ -14,7 +14,7 @@ jobs:
         strategy:
             matrix:
                 build_env:
-                - curl: "8.9.1"
+                - curl: "8.11.1"
                   quiche: "0.21.0"
 
         steps:
