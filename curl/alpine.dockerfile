@@ -21,7 +21,8 @@ RUN apk add --no-cache \
   pkgconfig \
   wget \
   zlib-dev \
-  libpsl-dev
+  libpsl-dev \
+  libidn2-dev
 
 RUN wget https://sh.rustup.rs -O - | sh -s -- -y
 
@@ -71,6 +72,8 @@ COPY --from=base /usr/lib/libnghttp2.so.14 /usr/lib/libnghttp2.so.14
 COPY --from=base /usr/lib/libbrotlidec.so.1 /usr/lib/libbrotlidec.so.1
 COPY --from=base /lib/libz.so.1 /lib/libz.so.1
 COPY --from=base /usr/lib/libbrotlicommon.so.1 /usr/lib/libbrotlicommon.so.1
+COPY --from=base /usr/lib/libidn2.so.0 /usr/lib/libidn2.so.0
+COPY --from=base /usr/lib/libpsl.so.5 /usr/lib/libpsl.so.5
 
 USER nobody
 RUN env | sort; which curl; curl --version
