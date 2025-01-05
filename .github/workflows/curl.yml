@@ -30,16 +30,16 @@ jobs:
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3
 
-            - name: Build and push Curl ${{ matrix.build_env.curl }} quiche ${{ matrix.build_env.quiche }} 
-              uses: docker/build-push-action@v6
-              with:
-                context: ./curl
-                file: ./curl/alpine.dockerfile
-                push: true
-                tags: ${{ secrets.DOCKERHUB_USERNAME }}/curl:latest, ${{ secrets.DOCKERHUB_USERNAME }}/curl:${{ matrix.build_env.curl }}
-                build-args: |
-                            QUICHE_VERSION=${{ matrix.build_env.quiche }}
-                            CURL_VERSION=${{ matrix.build_env.curl }}
+           # - name: Build and push Curl ${{ matrix.build_env.curl }} quiche ${{ matrix.build_env.quiche }} 
+           #   uses: docker/build-push-action@v6
+           #   with:
+           #     context: ./curl
+           #     file: ./curl/alpine.dockerfile
+           #     push: true
+           #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/curl:latest, ${{ secrets.DOCKERHUB_USERNAME }}/curl:${{ matrix.build_env.curl }}
+           #    build-args: |
+           #                 QUICHE_VERSION=${{ matrix.build_env.quiche }}
+           #                CURL_VERSION=${{ matrix.build_env.curl }}
 
             - name: Build and push Curl Deb ${{ matrix.build_env.curl }} quiche ${{ matrix.build_env.quiche }} 
               uses: docker/build-push-action@v6
