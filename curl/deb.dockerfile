@@ -54,6 +54,7 @@ RUN /tmp/build/curl/curl-build/usr/local/bin/curl --version
 RUN apt update && apt-get install dh-make dpkg-dev build-essential fakeroot \
     cd /tmp/build/curl/ \
     mkdir -p curl-deb/DEBIAN \
+    ls -la \
     echo "Package: curl" > curl-deb/DEBIAN/control && \
     echo "Version: $CURL_VERSION" >> curl-deb/DEBIAN/control && \
     echo "Section: web" >> curl-deb/DEBIAN/control && \
