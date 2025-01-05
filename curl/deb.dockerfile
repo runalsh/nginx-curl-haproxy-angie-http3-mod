@@ -51,7 +51,7 @@ RUN cd /tmp/build/curl && \
 
 RUN /tmp/build/curl/curl-build/usr/local/bin/curl --version
 
-RUN apt update && apt-get install dh-make dpkg-dev build-essential fakeroot && \
+RUN apt update && apt-get install -y dh-make dpkg-dev build-essential fakeroot && \
     cd /tmp/build/curl/ && \
     mkdir -p curl-deb/DEBIAN && \
     ls -la && \
