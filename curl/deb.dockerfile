@@ -10,7 +10,7 @@ ARG QUICHE_VERSION
 
 RUN apt-get update && \
     apt-get --no-install-recommends --no-install-suggests -y install locales wget ca-certificates  openssl gnupg2 apt-transport-https unzip make libpcre3-dev zlib1g-dev build-essential devscripts debhelper quilt lsb-release libssl-dev lintian uuid-dev && \
-    apt-get --no-install-recommends --no-install-suggests -y install git libnghttp2-dev libtool autoconf automake libbrotli-dev  libpsl-dev pkg-config cmake  && \
+    apt-get --no-install-recommends --no-install-suggests -y install git libnghttp2-dev libtool autoconf automake libbrotli-dev libpsl-dev pkg-config cmake  && \
     rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /tmp/build/curl/cargo
@@ -49,12 +49,6 @@ RUN cd /tmp/build/curl && \
     make -j$proc && \
     make DESTDIR="/tmp/build/curl/curl-build/" install
 
-    # make -j$proc
-    # && \
-    # make install
-#   wget http://ftp.de.debian.org/debian/pool/main/c/curl/curl_8.6.0-4.debian.tar.xz && \
-#   tar -xJf curl_8.6.0-4.debian.tar.xz -C ./curl-${CURL_VERSION} && \
-
 RUN /tmp/build/curl/curl-build/usr/local/bin/curl --version
 
 RUN apt update && apt-get install dh-make dpkg-dev build-essential fakeroot \
@@ -63,11 +57,8 @@ RUN apt update && apt-get install dh-make dpkg-dev build-essential fakeroot \
     echo "Package: curl" > curl-deb/DEBIAN/control && \
     echo "Version: $CURL_VERSION" >> curl-deb/DEBIAN/control && \
     echo "Section: web" >> curl-deb/DEBIAN/control && \
-    echo "Priority: optional" >> curl-deb/DEBIAN/control && \
     echo "Architecture: $(dpkg --print-architecture)" >> curl-deb/DEBIAN/control && \
     echo "Depends: libc6, libssl3, zlib1g, libbrotli1, libnghttp2-14, libbrotli-dev, libnghttp2-dev, ca-certificates, libpsl" >> curl-deb/DEBIAN/control && \
-    echo "Description: curl with QUIC support via quiche and BoringSSL" >> curl-deb/DEBIAN/control && \
-    echo " curl is a command line tool and library for transferring data with URLs." >> curl-deb/DEBIAN/control \
     cp -a curl-build/* curl-deb/ \
     chmod -R 755 curl-deb/DEBIAN \
     dpkg-deb --build curl-deb \
@@ -85,14 +76,18 @@ ARG QUICHE_VERSION
 
 RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y ca-certificates && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /tmp/build/curl/curl-build/usr /usr
-COPY --from=builder /tmp/build/curl/quiche-build/libquiche.so /usr/lib/libquiche.so
-COPY --from=builder /usr/lib/x86_64-linux-gnu/libgcc_s.so.1 /usr/lib/libgcc_s.so.1
-COPY --from=builder /usr/lib/x86_64-linux-gnu/libnghttp2.so.14 /usr/lib/libnghttp2.so.14
-COPY --from=builder /usr/lib/x86_64-linux-gnu/libbrotlidec.so.1 /usr/lib/libbrotlidec.so.1
-COPY --from=builder /lib/x86_64-linux-gnu/libz.so.1 /lib/libz.so.1
-COPY --from=builder /usr/lib/x86_64-linux-gnu/libbrotlicommon.so.1 /usr/lib/libbrotlicommon.so.1
-COPY --from=builder /usr/lib/x86_64-linux-gnu/libpsl.so.5 /usr/lib/libpsl.so.5
+#COPY --from=builder /tmp/build/curl/curl-build/usr /usr
+#COPY --from=builder /tmp/build/curl/quiche-build/libquiche.so /usr/lib/libquiche.so
+#COPY --from=builder /usr/lib/x86_64-linux-gnu/libgcc_s.so.1 /usr/lib/libgcc_s.so.1
+#COPY --from=builder /usr/lib/x86_64-linux-gnu/libnghttp2.so.14 /usr/lib/libnghttp2.so.14
+#COPY --from=builder /usr/lib/x86_64-linux-gnu/libbrotlidec.so.1 /usr/lib/libbrotlidec.so.1
+#COPY --from=builder /lib/x86_64-linux-gnu/libz.so.1 /lib/libz.so.1
+#COPY --from=builder /usr/lib/x86_64-linux-gnu/libbrotlicommon.so.1 /usr/lib/libbrotlicommon.so.1
+#COPY --from=builder /usr/lib/x86_64-linux-gnu/libpsl.so.5 /usr/lib/libpsl.so.5
+
+COPY --from=builder /tmp/build/curl/curl_${CURL_VERSION}_amd64.deb /tmp/curl_${CURL_VERSION}_amd64.deb
+RUN dpkg -i /tmp/curl_${CURL_VERSION}_amd64.deb
+
 
 RUN ldconfig
 RUN env | sort; which curl; curl --version
