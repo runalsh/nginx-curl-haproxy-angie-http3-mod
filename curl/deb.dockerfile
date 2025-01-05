@@ -45,6 +45,7 @@ RUN cd /tmp/build/curl && \
     --with-nghttp2 \
     --with-openssl=/tmp/build/curl/quiche-${QUICHE_VERSION}/quiche/deps/boringssl/src \
     --with-quiche=/tmp/build/curl/quiche-${QUICHE_VERSION}/target/release \
+    --without-libpsl \
     --with-zlib && \
     make -j$proc && \
     make DESTDIR="/tmp/build/curl/curl-build/" install
