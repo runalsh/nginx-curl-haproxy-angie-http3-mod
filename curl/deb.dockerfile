@@ -51,20 +51,20 @@ RUN cd /tmp/build/curl && \
 
 RUN /tmp/build/curl/curl-build/usr/local/bin/curl --version
 
-RUN apt update && apt-get install dh-make dpkg-dev build-essential fakeroot \
-    cd /tmp/build/curl/ \
-    mkdir -p curl-deb/DEBIAN \
-    ls -la \
+RUN apt update && apt-get install dh-make dpkg-dev build-essential fakeroot && \
+    cd /tmp/build/curl/ && \
+    mkdir -p curl-deb/DEBIAN && \
+    ls -la && \
     echo "Package: curl" > curl-deb/DEBIAN/control && \
     echo "Version: $CURL_VERSION" >> curl-deb/DEBIAN/control && \
     echo "Section: web" >> curl-deb/DEBIAN/control && \
     echo "Architecture: $(dpkg --print-architecture)" >> curl-deb/DEBIAN/control && \
     echo "Depends: libc6, libssl3, zlib1g, libbrotli1, libnghttp2-14, libbrotli-dev, libnghttp2-dev, ca-certificates, libpsl" >> curl-deb/DEBIAN/control && \
-    cp -a curl-build/* curl-deb/ \
-    chmod -R 755 curl-deb/DEBIAN \
-    dpkg-deb --build curl-deb \
-    mv curl-deb.deb curl_${CURL_VERSION}_$(dpkg --print-architecture).deb \
-    sudo dpkg -i curl_${CURL_VERSION}_$(dpkg --print-architecture).deb \
+    cp -a curl-build/* curl-deb/ && \
+    chmod -R 755 curl-deb/DEBIAN && \
+    dpkg-deb --build curl-deb && \
+    mv curl-deb.deb curl_${CURL_VERSION}_$(dpkg --print-architecture).deb && \
+    sudo dpkg -i curl_${CURL_VERSION}_$(dpkg --print-architecture).deb && \
     curl -version
 
 FROM debian:12-slim
