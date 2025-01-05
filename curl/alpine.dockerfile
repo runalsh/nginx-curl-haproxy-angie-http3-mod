@@ -21,7 +21,7 @@ RUN apk add --no-cache \
   pkgconfig \
   wget \
   zlib-dev \
-  libpsl
+  libpsl-dev
 
 RUN wget https://sh.rustup.rs -O - | sh -s -- -y
 
