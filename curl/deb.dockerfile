@@ -58,7 +58,7 @@ RUN apt update && apt-get install -y dh-make dpkg-dev build-essential fakeroot &
     echo "Version: $CURL_VERSION" >> curl-deb/DEBIAN/control && \
     echo "Section: web" >> curl-deb/DEBIAN/control && \
     echo "Architecture: $(dpkg --print-architecture)" >> curl-deb/DEBIAN/control && \
-    echo "Depends: libc6, libssl3, zlib1g, libbrotli1, libnghttp2-14, libbrotli-dev, libnghttp2-dev, ca-certificates, libpsl" >> curl-deb/DEBIAN/control && \
+    echo "Depends: libc6, libssl3, zlib1g, libbrotli1, libnghttp2-14, libbrotli-dev, libnghttp2-dev, ca-certificates" >> curl-deb/DEBIAN/control && \
     cp -a curl-build/* curl-deb/ && \
     chmod -R 755 curl-deb/DEBIAN && \
     dpkg-deb --build curl-deb && \
