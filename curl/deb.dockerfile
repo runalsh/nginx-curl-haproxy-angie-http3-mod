@@ -62,7 +62,7 @@ RUN apt update && apt-get install dh-make dpkg-dev build-essential fakeroot \
     cp -a curl-build/* curl-deb/ \
     chmod -R 755 curl-deb/DEBIAN \
     dpkg-deb --build curl-deb \
-    mv curl-deb.deb curl_${CURL_VERSION}_$(dpkg --print-architecture).deb
+    mv curl-deb.deb curl_${CURL_VERSION}_$(dpkg --print-architecture).deb \
     sudo dpkg -i curl_${CURL_VERSION}_$(dpkg --print-architecture).deb \
     curl -version
 
