@@ -1,4 +1,4 @@
-FROM alpine:3.21 as builder
+FROM alpine:3.20 as builder
 
 ENV NGINX_VERSION 1.25.5
 ENV NGINX_HTTP_PROXY_CONNECT_MODULE 0.0.6
@@ -91,7 +91,7 @@ RUN cd /tmp/build/nginx/nginx-${NGINX_VERSION} && \
     make install DESTDIR=/tmp/build/nginx/nginx-build && \
     ls -la /tmp/build/nginx/nginx-build
 
-    FROM alpine:3.21
+    FROM alpine:3.20
 
 ENV NGINX_VERSION 1.25.5
 ENV NGINX_HTTP_PROXY_CONNECT_MODULE 0.0.6
