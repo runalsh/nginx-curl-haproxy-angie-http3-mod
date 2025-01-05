@@ -58,7 +58,7 @@ RUN cd /tmp/build/curl && \
   make install && \
   ls -la /tmp/build/curl/curl-build
 
-  FROM alpine:3.20
+FROM alpine:3.20
 
 ENV CURL_VERSION 8.7.1
 ENV QUICHE_VERSION 0.20.1
@@ -74,6 +74,7 @@ COPY --from=base /lib/libz.so.1 /lib/libz.so.1
 COPY --from=base /usr/lib/libbrotlicommon.so.1 /usr/lib/libbrotlicommon.so.1
 COPY --from=base /usr/lib/libidn2.so.0 /usr/lib/libidn2.so.0
 COPY --from=base /usr/lib/libpsl.so.5 /usr/lib/libpsl.so.5
+COPY --from=base /usr/lib/libunistring.so.5 /usr/lib/libunistring.so.5
 
 USER nobody
 RUN env | sort; which curl; curl --version
