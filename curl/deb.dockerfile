@@ -75,6 +75,8 @@ COPY --from=builder /usr/lib/x86_64-linux-gnu/libnghttp2.so.14 /usr/lib/libnghtt
 COPY --from=builder /usr/lib/x86_64-linux-gnu/libbrotlidec.so.1 /usr/lib/libbrotlidec.so.1
 COPY --from=builder /lib/x86_64-linux-gnu/libz.so.1 /lib/libz.so.1
 COPY --from=builder /usr/lib/x86_64-linux-gnu/libbrotlicommon.so.1 /usr/lib/libbrotlicommon.so.1
+COPY --from=builder /usr/lib/x86_64-linux-gnu/libpsl.so.5 /usr/lib/libpsl.so.5
+COPY --from=builder /usr/lib/x86_64-linux-gnu/libunistring.so.5 /usr/lib/libunistring.so.5
 
 RUN ldconfig
 RUN env | sort; which curl; curl --version
