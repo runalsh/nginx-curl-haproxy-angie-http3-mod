@@ -54,7 +54,6 @@ RUN /tmp/build/curl/curl-build/usr/local/bin/curl --version
 RUN apt update && apt-get install -y dh-make dpkg-dev build-essential fakeroot && \
     cd /tmp/build/curl/ && \
     mkdir -p curl-deb/DEBIAN && \
-    ls -la && \
     echo "Package: curl" > curl-deb/DEBIAN/control && \
     echo "Version: $CURL_VERSION" >> curl-deb/DEBIAN/control && \
     echo "Section: web" >> curl-deb/DEBIAN/control && \
@@ -64,7 +63,7 @@ RUN apt update && apt-get install -y dh-make dpkg-dev build-essential fakeroot &
     chmod -R 755 curl-deb/DEBIAN && \
     dpkg-deb --build curl-deb && \
     mv curl-deb.deb curl_${CURL_VERSION}_$(dpkg --print-architecture).deb && \
-    sudo dpkg -i curl_${CURL_VERSION}_$(dpkg --print-architecture).deb && \
+    dpkg -i curl_${CURL_VERSION}_$(dpkg --print-architecture).deb && \
     curl -version
 
 FROM debian:12-slim
