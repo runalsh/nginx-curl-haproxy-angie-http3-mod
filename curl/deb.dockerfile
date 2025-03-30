@@ -67,8 +67,7 @@ RUN apt update && apt-get install -y dh-make dpkg-dev build-essential fakeroot &
     chmod -R 755 curl-deb/DEBIAN && \
     dpkg-deb --build curl-deb && \
     mv curl-deb.deb curl_${CURL_VERSION}_$(dpkg --print-architecture).deb && \
-    dpkg -i curl_${CURL_VERSION}_$(dpkg --print-architecture).deb && \
-    curl -version
+    dpkg -i curl_${CURL_VERSION}_$(dpkg --print-architecture).deb
 
 FROM debian:12-slim
 
