@@ -15,7 +15,7 @@ jobs:
             matrix:
                 build_env:
                 - httpconnect: "0.0.7"
-                  quictls: "3.3.0"
+                  quictls: "3.1.7"
                   angie: "1.8.2"
 
         steps:
