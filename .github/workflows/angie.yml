@@ -20,7 +20,7 @@ jobs:
                 build_env:
                 - httpconnect: "0.0.7"
                   quictls: "3.1.7"
-                  angie: "1.8.2"
+                  angie: "1.10.2"
 
         steps:
             - name: Checkout
