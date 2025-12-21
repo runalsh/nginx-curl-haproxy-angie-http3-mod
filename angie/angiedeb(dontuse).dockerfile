@@ -1,5 +1,5 @@
 
-FROM debian:12-slim as builder
+FROM debian:13-slim as builder
 
 ENV ANGIE_VERSION 1.5.1
 ENV NGINX_HTTP_PROXY_CONNECT_MODULE 0.0.6
@@ -83,7 +83,7 @@ RUN mkdir -p /tmp/angie && \
     rm -rf /tmp/build && \
     ls -la /tmp/angie
 
-FROM debian:12-slim
+FROM debian:13-slim
 
 ENV ANGIE_VERSION 1.5.0
 ENV NGINX_HTTP_PROXY_CONNECT_MODULE 0.0.6
