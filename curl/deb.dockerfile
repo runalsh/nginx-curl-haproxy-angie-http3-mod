@@ -1,5 +1,5 @@
 # FROM buildpack-deps:latest as builder
-FROM debian:12-slim as builder
+FROM debian:13-slim as builder
 
 ENV CURL_VERSION 8.7.1
 ENV QUICHE_VERSION 0.20.1
@@ -69,7 +69,7 @@ RUN apt update && apt-get install -y dh-make dpkg-dev build-essential fakeroot &
     mv curl-deb.deb curl_${CURL_VERSION}_$(dpkg --print-architecture).deb && \
     dpkg -i curl_${CURL_VERSION}_$(dpkg --print-architecture).deb
 
-FROM debian:12-slim
+FROM debian:13-slim
 
 ENV CURL_VERSION 8.7.1
 ENV QUICHE_VERSION 0.20.1
