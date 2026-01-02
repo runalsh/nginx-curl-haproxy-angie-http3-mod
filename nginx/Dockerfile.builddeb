@@ -1,4 +1,4 @@
-FROM debian:12-slim as builder
+FROM debian:13-slim as builder
 
 ENV NGINX_VERSION 1.29.2
 ENV NGINX_HTTP_PROXY_CONNECT_MODULE 0.0.7
@@ -77,7 +77,7 @@ RUN /tmp/build/nginx/nginx-${NGINX_VERSION}/debian/build-nginx/objs/nginx -V
 #     ln -sf /dev/stdout /var/log/nginx/error.log && \
 #     ln -sf /dev/stdout /var/log/nginx/access.log
 
-FROM debian:12-slim
+FROM debian:13-slim
 
 ENV NGINX_VERSION 1.29.2
 ENV NGINX_HTTP_PROXY_CONNECT_MODULE 0.0.7
