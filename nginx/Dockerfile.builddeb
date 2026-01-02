@@ -51,7 +51,7 @@ RUN osversion=$(lsb_release -cs) && \
     wget https://nginx.org/packages/mainline/debian/pool/nginx/n/nginx/nginx_${NGINX_VERSION}-1~$osversion.debian.tar.xz && \
     tar -xJf nginx_${NGINX_VERSION}-1~$osversion.debian.tar.xz -C ./nginx-${NGINX_VERSION}
 
-RUN sed -i "s#--with-stream_ssl_preread_module#--with-stream_ssl_preread_module --add-module=/tmp/build/module/ngx_http_proxy_connect_module --add-module=/tmp/build/module/nginx_upstream_check_module --add-module=/tmp/build/module/ngx_cache_purge --add-module=/tmp/build/module/ngx_http_substitutions_filter_module --add-module=/tmp/build/module/echo-nginx-module#g" /tmp/build/nginx/nginx-${NGINX_VERSION}/debian/rules 
+RUN sed -i "s#--with-stream_ssl_preread_module#--with-stream_ssl_preread_module  --with-http_v3_module  --add-module=/tmp/build/module/ngx_http_proxy_connect_module --add-module=/tmp/build/module/nginx_upstream_check_module --add-module=/tmp/build/module/ngx_cache_purge --add-module=/tmp/build/module/ngx_http_substitutions_filter_module --add-module=/tmp/build/module/echo-nginx-module#g" /tmp/build/nginx/nginx-${NGINX_VERSION}/debian/rules 
 
 RUN find "/tmp/build/nginx/nginx-${NGINX_VERSION}/debian" -type f -exec sed -i 's|/run/nginx\.pid|/var/run/nginx.pid|g' {} \;
 
