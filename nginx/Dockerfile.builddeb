@@ -1,4 +1,4 @@
-FROM buildpack-deps:latest as builder
+FROM debian:12-slim as builder
 
 ENV NGINX_VERSION 1.29.2
 ENV NGINX_HTTP_PROXY_CONNECT_MODULE 0.0.7
@@ -7,8 +7,9 @@ ARG NGINX_VERSION
 ARG NGINX_HTTP_PROXY_CONNECT_MODULE
 
 RUN apt-get update && \
-    apt-get --no-install-recommends --no-install-suggests -y install locales wget ca-certificates openssl gnupg2 apt-transport-https unzip make libpcre2-dev zlib1g-dev build-essential devscripts debhelper quilt lsb-release libssl-dev lintian uuid-dev git && \
+    apt-get --no-install-recommends --no-install-suggests -y install locales wget ca-certificates openssl gnupg2 apt-transport-https unzip make libpcre2-dev zlib1g-dev build-essential devscripts debhelper quilt lsb-release libssl-dev lintian uuid-dev git curl g++ libgeoip-dev libpcre3-dev libssl-dev make unzip && \
     rm -rf /var/lib/apt/lists/*
+
 
 RUN mkdir -p /tmp/build/nginx && \
     cd /tmp/build/nginx && \
@@ -50,7 +51,11 @@ RUN osversion=$(lsb_release -cs) && \
     wget https://nginx.org/packages/mainline/debian/pool/nginx/n/nginx/nginx_${NGINX_VERSION}-1~$osversion.debian.tar.xz && \
     tar -xJf nginx_${NGINX_VERSION}-1~$osversion.debian.tar.xz -C ./nginx-${NGINX_VERSION}
 
-RUN sed -i "s#--with-stream_ssl_preread_module#--with-stream_ssl_preread_module --with-http_v2_module --with-http_v3_module --add-module=/tmp/build/module/ngx_http_proxy_connect_module --add-module=/tmp/build/module/nginx_upstream_check_module --add-module=/tmp/build/module/ngx_cache_purge --add-module=/tmp/build/module/ngx_http_substitutions_filter_module --add-module=/tmp/build/module/echo-nginx-module#g" /tmp/build/nginx/nginx-${NGINX_VERSION}/debian/rules 
+RUN sed -i "s#--with-stream_ssl_preread_module#--with-stream_ssl_preread_module --add-module=/tmp/build/module/ngx_http_proxy_connect_module --add-module=/tmp/build/module/nginx_upstream_check_module --add-module=/tmp/build/module/ngx_cache_purge --add-module=/tmp/build/module/ngx_http_substitutions_filter_module --add-module=/tmp/build/module/echo-nginx-module#g" /tmp/build/nginx/nginx-${NGINX_VERSION}/debian/rules 
+
+RUN find "/tmp/build/nginx/nginx-${NGINX_VERSION}/debian" -type f -exec sed -i 's|/run/nginx\.pid|/var/run/nginx.pid|g' {} \;
+
+RUN find "/tmp/build/nginx/nginx-${NGINX_VERSION}/debian" -type f -exec sed -i 's|/run/nginx\.lock|/var/run/nginx.lock|g' {} \;
 
 RUN cd /tmp/build/nginx/nginx-${NGINX_VERSION} && \
     # make clean && \
