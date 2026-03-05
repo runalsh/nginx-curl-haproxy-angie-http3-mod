@@ -47,7 +47,7 @@ jobs:
            #                CURL_VERSION=${{ matrix.build_env.curl }}
 
             - name: Build and push Curl Deb ${{ matrix.build_env.curl }} quiche ${{ matrix.build_env.quiche }} 
-              uses: docker/build-push-action@v6
+              uses: docker/build-push-action@v7
               with:
                 context: ./curl
                 file: ./curl/deb.dockerfile
