@@ -15,7 +15,7 @@ jobs:
             matrix:
                 build_env:
                 - quictls: "3.3.0"
-                  haproxy: "3.2.6"
+                  haproxy: "3.3.6"
 
         steps:
             - name: Checkout
@@ -34,7 +34,7 @@ jobs:
               uses: docker/build-push-action@v7
               with:
                 context: ./haproxy
-                file: ./haproxy/Dockerfile.alpine
+                file: ./haproxy/alpine.dockerfile
                 push: true
                 tags: ${{ secrets.DOCKERHUB_USERNAME }}/haproxy:latest, ${{ secrets.DOCKERHUB_USERNAME }}/haproxy:${{ matrix.build_env.haproxy }}
                 build-args: |

@@ -1,13 +1,13 @@
 
 FROM alpine:3.23 AS base
 
-ENV CURL_VERSION 8.17.0
-ENV QUICHE_VERSION 0.24.5
+ENV CURL_VERSION=8.17.0
+ENV QUICHE_VERSION=0.24.5
 ARG CURL_VERSION
 ARG QUICHE_VERSION
 
 RUN mkdir -p /tmp/build/curl/cargo
-ENV HOME /tmp/build/curl/cargo
+ENV HOME=/tmp/build/curl/cargo
 
 RUN apk add --no-cache \
   autoconf \
@@ -31,7 +31,7 @@ RUN apk add --no-cache \
 
 RUN wget https://sh.rustup.rs -O - | sh -s -- -y && date
 
-ENV PATH "${PATH}:$HOME/.cargo/bin"
+ENV PATH="${PATH}:$HOME/.cargo/bin"
 RUN cargo --version; rustc --version
 
 RUN cd /tmp/build/curl && \
@@ -65,8 +65,8 @@ RUN cd /tmp/build/curl && \
 
 FROM alpine:3.23
 
-ENV CURL_VERSION 8.17.0
-ENV QUICHE_VERSION 0.24.5
+ENV CURL_VERSION=8.17.0
+ENV QUICHE_VERSION=0.24.5
 ARG CURL_VERSION
 ARG QUICHE_VERSION
 

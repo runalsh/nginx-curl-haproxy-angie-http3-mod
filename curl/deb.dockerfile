@@ -1,24 +1,24 @@
 # FROM buildpack-deps:latest as builder
-FROM debian:13-slim as builder
+FROM debian:13-slim AS builder
 
-ENV CURL_VERSION 8.7.1
-ENV QUICHE_VERSION 0.20.1
+ENV CURL_VERSION=8.19.0
+ENV QUICHE_VERSION=0.24.5
 RUN export LANGUAGE=en_US.UTF-8 && export LC_ALL=en_US.UTF-8 && export LANG=en_US.UTF-8 && export LC_CTYPE=en_US.UTF-8
 
 ARG CURL_VERSION
 ARG QUICHE_VERSION
 
 RUN apt-get update && \
-    apt-get --no-install-recommends --no-install-suggests -y install locales wget ca-certificates  openssl gnupg2 apt-transport-https unzip make libpcre3-dev zlib1g-dev build-essential devscripts debhelper quilt lsb-release libssl-dev lintian uuid-dev && \
+    apt-get --no-install-recommends --no-install-suggests -y install locales wget ca-certificates  openssl gnupg2 apt-transport-https unzip make libpcre2-dev zlib1g-dev build-essential devscripts debhelper quilt lsb-release libssl-dev lintian uuid-dev && \
     apt-get --no-install-recommends --no-install-suggests -y install git libnghttp2-dev libtool autoconf automake libbrotli-dev libpsl-dev pkg-config cmake  && \
     rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /tmp/build/curl/cargo
-ENV HOME /tmp/build/curl/cargo
+ENV HOME=/tmp/build/curl/cargo
 
 RUN wget https://sh.rustup.rs -O - | sh -s -- -y
 
-ENV PATH "${PATH}:$HOME/.cargo/bin"
+ENV PATH="${PATH}:$HOME/.cargo/bin"
 RUN cargo --version; rustc --version
 
 RUN mkdir -p /tmp/build/curl && \
@@ -71,8 +71,8 @@ RUN apt update && apt-get install -y dh-make dpkg-dev build-essential fakeroot &
 
 FROM debian:13-slim
 
-ENV CURL_VERSION 8.7.1
-ENV QUICHE_VERSION 0.20.1
+ENV CURL_VERSION=8.19.0
+ENV QUICHE_VERSION=0.24.5
 
 ARG CURL_VERSION
 ARG QUICHE_VERSION
@@ -90,7 +90,6 @@ RUN apt-get update && apt-get install --no-install-recommends --no-install-sugge
 
 COPY --from=builder /tmp/build/curl/curl_${CURL_VERSION}_amd64.deb /tmp/curl_${CURL_VERSION}_amd64.deb
 RUN dpkg -i /tmp/curl_${CURL_VERSION}_amd64.deb
-
 
 RUN ldconfig
 RUN env | sort; which curl; curl --version

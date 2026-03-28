@@ -1,7 +1,7 @@
-FROM golang:alpine as builder
+FROM golang:alpine AS builder
 
-ENV HAPROXY_VERSION 2.9.7
-ENV QUICTLS_VERSION 3.1.5
+ENV HAPROXY_VERSION=3.3.6
+ENV QUICTLS_VERSION=3.3.0
 
 ARG HAPROXY_VERSION
 ARG QUICTLS_VERSION
@@ -42,12 +42,11 @@ RUN cd /tmp/build/haproxy/haproxy-${HAPROXY_VERSION} && \
     make TARGET=linux-musl install-bin DESTDIR="/tmp/build/haproxy/haproxy-build" && \
     /tmp/build/haproxy/haproxy-build/usr/local/sbin/haproxy -v
 
-
 FROM alpine:3.23
 
-ENV HAPROXY_VERSION 2.9.7
-ENV HAPROXY_MAJOR_VERSION 2.9
-ENV QUICTLS_VERSION 3.1.5
+ENV HAPROXY_VERSION=3.3.6
+ENV HAPROXY_MAJOR_VERSION=3.3
+ENV QUICTLS_VERSION=3.3.0
 
 ARG HAPROXY_VERSION
 ARG HAPROXY_MAJOR_VERSION

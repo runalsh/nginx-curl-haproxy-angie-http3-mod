@@ -1,13 +1,13 @@
 
 FROM alpine:3.23 AS base
 
-ENV CURL_VERSION 8.7.1
-ENV QUICHE_VERSION 0.20.1
+ENV CURL_VERSION=8.7.1
+ENV QUICHE_VERSION=0.20.1
 ARG CURL_VERSION
 ARG QUICHE_VERSION
 
 RUN mkdir -p /tmp/build/curl/cargo
-ENV HOME /tmp/build/curl/cargo
+ENV HOME=/tmp/build/curl/cargo
 
 RUN apk add --no-cache \
   autoconf \
@@ -60,8 +60,8 @@ RUN cd /tmp/build/curl && \
 
 FROM alpine:3.23
 
-ENV CURL_VERSION 8.7.1
-ENV QUICHE_VERSION 0.20.1
+ENV CURL_VERSION=8.7.1
+ENV QUICHE_VERSION=0.20.1
 ARG CURL_VERSION
 ARG QUICHE_VERSION
 
