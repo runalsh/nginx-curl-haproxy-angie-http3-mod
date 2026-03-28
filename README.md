@@ -1,4 +1,4 @@
-Current: Nginx, Angie , Curl, Haproxy, Quictls 3.1.7, Boringssl 0568c2c, http_connect_module 0.0.7
+Current: Nginx, Angie , Curl, Haproxy, Quictls, Boringssl, http_connect_module
 
 Nginx with ngx_http_proxy_connect_module and quic-http/3
     
