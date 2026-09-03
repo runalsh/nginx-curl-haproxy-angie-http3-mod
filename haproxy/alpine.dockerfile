@@ -42,7 +42,7 @@ RUN cd /tmp/build/haproxy/haproxy-${HAPROXY_VERSION} && \
     make TARGET=linux-musl install-bin DESTDIR="/tmp/build/haproxy/haproxy-build" && \
     /tmp/build/haproxy/haproxy-build/usr/local/sbin/haproxy -v
 
-FROM alpine:3.23
+FROM alpine:3.24
 
 ENV HAPROXY_VERSION=3.3.6
 ENV HAPROXY_MAJOR_VERSION=3.3
